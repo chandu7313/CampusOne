@@ -1,0 +1,6 @@
+{"level":"debug","message":"Executing (default): SELECT 1+1 AS result","service":"campus-one-backend","timestamp":"2026-02-27 10:52:32"}
+{"level":"debug","message":"Executing (default): SELECT 1+1 AS result","service":"campus-one-backend","timestamp":"2026-02-27 10:52:32"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-02-27 10:52:32"}
+{"level":"info","message":"Server running on port 5000 in development mode","service":"campus-one-backend","timestamp":"2026-02-27 10:52:32"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-02-27 10:52:32"}
+{"level":"info","message":"Server running on port 5000 in development mode","service":"campus-one-backend","timestamp":"2026-02-27 10:52:32"}
