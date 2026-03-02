@@ -7,6 +7,11 @@ const seedUsers = async () => {
     try {
         await connectDB();
 
+        // Sync models with database
+        logger.info('Syncing database schema...');
+        await sequelize.sync({ alter: true });
+        logger.info('Database schema synced successfully.');
+
         // Create Faculty Account
         const facultyExists = await User.findOne({ where: { email: 'faculty@campusone.edu' } });
         if (!facultyExists) {

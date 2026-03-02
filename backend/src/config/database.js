@@ -5,6 +5,12 @@ import logger from '../utils/logger.js';
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: 'postgres',
     logging: false,
+    dialectOptions: {
+        ssl: {
+            require: true,
+            rejectUnauthorized: false // Necessary for some managed DBs like Supabase
+        }
+    },
     pool: {
         max: 5,
         min: 0,
