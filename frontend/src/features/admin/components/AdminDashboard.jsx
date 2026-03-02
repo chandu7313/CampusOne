@@ -1,74 +1,94 @@
-import { Users, GraduationCap, DollarSign, Activity } from 'lucide-react';
+import React from 'react';
+import { Users, GraduationCap, DollarSign, Activity, UserPlus, FileText, Shield, Archive } from 'lucide-react';
+import { useAdminStats } from '../hooks/useAdminStats';
+import StatCard from './StatCard';
 import RevenueChart from './RevenueChart';
 import DepartmentDistribution from './DepartmentDistribution';
 import SystemLogs from './SystemLogs';
-
-const MetricCard = ({ icon: Icon, label, value, trend, color }) => (
-  <div className="glass" style={{ padding: '24px', borderRadius: '16px', flex: 1, minWidth: '260px' }}>
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '16px' }}>
-      <div style={{ padding: '12px', background: `${color}15`, color: color, borderRadius: '12px' }}>
-        <Icon size={24} />
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-        <span style={{ 
-          fontSize: '0.75rem', 
-          fontWeight: '700', 
-          color: trend.startsWith('+') ? '#10b981' : '#f43f5e' 
-        }}>
-          {trend}
-        </span>
-        <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>vs last month</span>
-      </div>
-    </div>
-    <h3 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '4px' }}>{value}</h3>
-    <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>{label}</p>
-  </div>
-);
+import FileUpload from '../../../components/FileUpload/FileUpload';
 
 const AdminDashboard = () => {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-      <header>
-        <h1 style={{ fontSize: '2rem', fontWeight: '700' }}>Admin Dashboard</h1>
-        <p style={{ color: 'var(--text-muted)' }}>System Overview & Institutional Analytics</p>
-      </header>
+    const { data: stats, isLoading, isError } = useAdminStats();
 
-      <section style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
-        <MetricCard icon={Users} label="Total Students" value="4,850" trend="+3.1%" color="#2563eb" />
-        <MetricCard icon={GraduationCap} label="Total Faculty" value="248" trend="+1.8%" color="#8b5cf6" />
-        <MetricCard icon={DollarSign} label="Total Revenue" value="$1.2M" trend="+5.6%" color="#10b981" />
-        <MetricCard icon={Activity} label="System Health" value="Optimal" trend="100%" color="#f59e0b" />
-      </section>
+    if (isLoading) return <div className="flex items-center justify-center min-h-[400px] text-[1.1rem] text-white/60">Loading Dashboard...</div>;
+    if (isError) return <div className="flex items-center justify-center min-h-[400px] text-[1.1rem] text-rose-500">Error loading dashboard statistics.</div>;
 
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          <RevenueChart />
-          <DepartmentDistribution />
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          <SystemLogs />
-          <div className="glass" style={{ padding: '24px', borderRadius: '16px' }}>
-            <h3 style={{ marginBottom: '16px' }}>Quick Actions</h3>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
-              {['Add Student', 'Generate Report', 'Manage Roles', 'Audit Trail'].map(action => (
-                <button key={action} style={{ 
-                  padding: '8px 16px', 
-                  borderRadius: '8px', 
-                  border: '1px solid var(--border)',
-                  background: 'var(--bg-main)',
-                  color: 'var(--text-main)',
-                  fontSize: '0.8rem',
-                  cursor: 'pointer'
-                }}>
-                  {action}
-                </button>
-              ))}
+    const { counts, systemHealth } = stats || {};
+    return (
+        <div className="flex flex-col gap-8 pb-8">
+            <header className="flex justify-between items-center">
+                <div>
+                    <h1 className="text-[clamp(1.5rem,5vw,2rem)] font-bold m-0 bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
+                        Admin Dashboard
+                    </h1>
+                    <p className="text-white/50 text-[0.95rem] mt-1">System Overview & Institutional Analytics</p>
+                </div>
+            </header>
+
+            <section className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-6">
+                <StatCard 
+                    icon={Users} 
+                    title="Total Students" 
+                    value={counts?.students} 
+                    trend={3.1} 
+                    color="blue" 
+                />
+                <StatCard 
+                    icon={GraduationCap} 
+                    title="Total Faculty" 
+                    value={counts?.faculty} 
+                    trend={1.8} 
+                    color="purple" 
+                />
+                <StatCard 
+                    icon={Shield} 
+                    title="Total Admins" 
+                    value={counts?.admins} 
+                    color="emerald" 
+                />
+                <StatCard 
+                    icon={Activity} 
+                    title="System Health" 
+                    value={systemHealth?.database === 'Connected' ? 'Optimal' : 'Issues'} 
+                    color="amber" 
+                />
+            </section>
+
+            <div className="grid grid-cols-[2fr_1fr] gap-6 max-xl:grid-cols-1">
+                <div className="flex flex-col gap-6">
+                    <RevenueChart data={stats?.revenueData} />
+                    <DepartmentDistribution data={stats?.departmentData} />
+                </div>
+                
+                <div className="flex flex-col gap-6">
+                    <SystemLogs logs={stats?.recentLogs} />
+                    
+                    <div className="glass rounded-[20px] p-6">
+                        <h3 className="text-[1.1rem] font-semibold mb-5 text-white/90">Quick Actions</h3>
+                        <div className="grid grid-cols-[repeat(auto-fill,minmax(130px,1fr))] gap-3">
+                            <button className="flex items-center justify-center gap-2 p-2.5 rounded-xl border border-white/10 bg-white/2 text-white/80 text-[0.85rem] font-medium transition-all duration-200 hover:bg-white/8 hover:border-white/20 hover:text-white hover:-translate-y-0.5 cursor-pointer">
+                                <UserPlus size={16} /> Add Student
+                            </button>
+                            <button className="flex items-center justify-center gap-2 p-2.5 rounded-xl border border-white/10 bg-white/2 text-white/80 text-[0.85rem] font-medium transition-all duration-200 hover:bg-white/8 hover:border-white/20 hover:text-white hover:-translate-y-0.5 cursor-pointer">
+                                <FileText size={16} /> Generate Report
+                            </button>
+                            <button className="flex items-center justify-center gap-2 p-2.5 rounded-xl border border-white/10 bg-white/2 text-white/80 text-[0.85rem] font-medium transition-all duration-200 hover:bg-white/8 hover:border-white/20 hover:text-white hover:-translate-y-0.5 cursor-pointer">
+                                <Shield size={16} /> Manage Roles
+                            </button>
+                            <button className="flex items-center justify-center gap-2 p-2.5 rounded-xl border border-white/10 bg-white/2 text-white/80 text-[0.85rem] font-medium transition-all duration-200 hover:bg-white/8 hover:border-white/20 hover:text-white hover:-translate-y-0.5 cursor-pointer">
+                                <Archive size={16} /> Audit Trail
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div className="glass rounded-[20px] p-6">
+                        <h3 className="text-[1.1rem] font-semibold mb-5 text-white/90">Test File Upload</h3>
+                        <FileUpload />
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default AdminDashboard;

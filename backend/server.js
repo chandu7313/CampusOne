@@ -13,7 +13,7 @@ const startServer = async () => {
     });
 
     process.on('unhandledRejection', (err) => {
-        logger.error('UNHANDLED REJECTION! 💥 Shutting down...');
+        logger.error('UNHANDLED REJECTION!  Shutting down...');
         logger.error(err.name, err.message);
         server.close(() => {
             process.exit(1);

@@ -4,3 +4,199 @@
 {"level":"info","message":"Server running on port 5000 in development mode","service":"campus-one-backend","timestamp":"2026-02-27 10:52:32"}
 {"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-02-27 10:52:32"}
 {"level":"info","message":"Server running on port 5000 in development mode","service":"campus-one-backend","timestamp":"2026-02-27 10:52:32"}
+{"level":"debug","message":"Executing (default): SELECT 1+1 AS result","service":"campus-one-backend","timestamp":"2026-02-27 11:35:34"}
+{"level":"debug","message":"Executing (default): SELECT 1+1 AS result","service":"campus-one-backend","timestamp":"2026-02-27 11:35:34"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-02-27 11:35:34"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-02-27 11:35:34"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-02-27 11:35:34"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-02-27 11:35:34"}
+{"level":"debug","message":"Executing (default): SELECT 1+1 AS result","service":"campus-one-backend","timestamp":"2026-02-27 11:47:46"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-02-27 11:47:46"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-02-27 11:47:46"}
+{"level":"debug","message":"Executing (default): SELECT 1+1 AS result","service":"campus-one-backend","timestamp":"2026-02-27 11:49:21"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-02-27 11:49:21"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-02-27 11:49:21"}
+{"level":"debug","message":"Executing (default): SELECT 1+1 AS result","service":"campus-one-backend","timestamp":"2026-02-27 11:49:48"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-02-27 11:49:48"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-02-27 11:49:48"}
+{"level":"debug","message":"Executing (default): SELECT 1+1 AS result","service":"campus-one-backend","timestamp":"2026-02-27 11:49:58"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-02-27 11:49:58"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-02-27 11:49:58"}
+{"level":"debug","message":"Executing (default): SELECT 1+1 AS result","service":"campus-one-backend","timestamp":"2026-02-27 11:50:00"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-02-27 11:50:00"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-02-27 11:50:00"}
+{"level":"debug","message":"Executing (default): SELECT 1+1 AS result","service":"campus-one-backend","timestamp":"2026-02-27 11:53:25"}
+{"level":"debug","message":"Executing (default): SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'Users'","service":"campus-one-backend","timestamp":"2026-02-27 11:53:25"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-02-27 11:53:25"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-02-27 11:53:25"}
+{"level":"debug","message":"Executing (default): SELECT t.typname enum_name, array_agg(e.enumlabel ORDER BY enumsortorder) enum_value FROM pg_type t JOIN pg_enum e ON t.oid = e.enumtypid JOIN pg_catalog.pg_namespace n ON n.oid = t.typnamespace WHERE n.nspname = 'public' AND t.typname='enum_Users_role' GROUP BY 1","service":"campus-one-backend","timestamp":"2026-02-27 11:53:25"}
+{"level":"debug","message":"Executing (default): DO 'BEGIN CREATE TYPE \"public\".\"enum_Users_role\" AS ENUM(''Admin'', ''HOD'', ''Faculty'', ''Student'', ''Finance''); EXCEPTION WHEN duplicate_object THEN null; END';","service":"campus-one-backend","timestamp":"2026-02-27 11:53:25"}
+{"level":"debug","message":"Executing (default): WITH ranges AS (  SELECT pg_range.rngtypid, pg_type.typname AS rngtypname,         pg_type.typarray AS rngtyparray, pg_range.rngsubtype    FROM pg_range LEFT OUTER JOIN pg_type ON pg_type.oid = pg_range.rngtypid)SELECT pg_type.typname, pg_type.typtype, pg_type.oid, pg_type.typarray,       ranges.rngtypname, ranges.rngtypid, ranges.rngtyparray  FROM pg_type LEFT OUTER JOIN ranges ON pg_type.oid = ranges.rngsubtype WHERE (pg_type.typtype IN('b', 'e'));","service":"campus-one-backend","timestamp":"2026-02-27 11:53:25"}
+{"level":"debug","message":"Executing (default): CREATE TABLE IF NOT EXISTS \"Users\" (\"id\" UUID , \"name\" VARCHAR(255) NOT NULL, \"email\" VARCHAR(255) NOT NULL UNIQUE, \"password\" VARCHAR(255) NOT NULL, \"role\" \"public\".\"enum_Users_role\" NOT NULL DEFAULT 'Student', \"department\" VARCHAR(255), \"isActive\" BOOLEAN DEFAULT true, \"createdAt\" TIMESTAMP WITH TIME ZONE NOT NULL, \"updatedAt\" TIMESTAMP WITH TIME ZONE NOT NULL, PRIMARY KEY (\"id\"));","service":"campus-one-backend","timestamp":"2026-02-27 11:53:25"}
+{"level":"debug","message":"Executing (default): SELECT i.relname AS name, ix.indisprimary AS primary, ix.indisunique AS unique, ix.indkey AS indkey, array_agg(a.attnum) as column_indexes, array_agg(a.attname) AS column_names, pg_get_indexdef(ix.indexrelid) AS definition FROM pg_class t, pg_class i, pg_index ix, pg_attribute a WHERE t.oid = ix.indrelid AND i.oid = ix.indexrelid AND a.attrelid = t.oid AND t.relkind = 'r' and t.relname = 'Users' GROUP BY i.relname, ix.indexrelid, ix.indisprimary, ix.indisunique, ix.indkey ORDER BY i.relname;","service":"campus-one-backend","timestamp":"2026-02-27 11:53:25"}
+{"level":"debug","message":"Executing (default): SELECT \"id\", \"name\", \"email\", \"password\", \"role\", \"department\", \"isActive\", \"createdAt\", \"updatedAt\" FROM \"Users\" AS \"User\" WHERE \"User\".\"role\" = 'Admin' LIMIT 1;","service":"campus-one-backend","timestamp":"2026-02-27 11:53:50"}
+{"level":"debug","message":"Executing (default): INSERT INTO \"Users\" (\"id\",\"name\",\"email\",\"password\",\"role\",\"department\",\"isActive\",\"createdAt\",\"updatedAt\") VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING \"id\",\"name\",\"email\",\"password\",\"role\",\"department\",\"isActive\",\"createdAt\",\"updatedAt\";","service":"campus-one-backend","timestamp":"2026-02-27 11:53:51"}
+{"level":"debug","message":"Executing (default): SELECT 1+1 AS result","service":"campus-one-backend","timestamp":"2026-02-27 11:54:15"}
+{"level":"debug","message":"Executing (default): SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'Users'","service":"campus-one-backend","timestamp":"2026-02-27 11:54:15"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-02-27 11:54:15"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-02-27 11:54:15"}
+{"level":"debug","message":"Executing (default): SELECT t.typname enum_name, array_agg(e.enumlabel ORDER BY enumsortorder) enum_value FROM pg_type t JOIN pg_enum e ON t.oid = e.enumtypid JOIN pg_catalog.pg_namespace n ON n.oid = t.typnamespace WHERE n.nspname = 'public' AND t.typname='enum_Users_role' GROUP BY 1","service":"campus-one-backend","timestamp":"2026-02-27 11:54:15"}
+{"level":"debug","message":"Executing (default): SELECT i.relname AS name, ix.indisprimary AS primary, ix.indisunique AS unique, ix.indkey AS indkey, array_agg(a.attnum) as column_indexes, array_agg(a.attname) AS column_names, pg_get_indexdef(ix.indexrelid) AS definition FROM pg_class t, pg_class i, pg_index ix, pg_attribute a WHERE t.oid = ix.indrelid AND i.oid = ix.indexrelid AND a.attrelid = t.oid AND t.relkind = 'r' and t.relname = 'Users' GROUP BY i.relname, ix.indexrelid, ix.indisprimary, ix.indisunique, ix.indkey ORDER BY i.relname;","service":"campus-one-backend","timestamp":"2026-02-27 11:54:15"}
+{"level":"debug","message":"Executing (default): SELECT 1+1 AS result","service":"campus-one-backend","timestamp":"2026-02-27 11:59:37"}
+{"level":"debug","message":"Executing (default): SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'Users'","service":"campus-one-backend","timestamp":"2026-02-27 11:59:37"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-02-27 11:59:37"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-02-27 11:59:37"}
+{"level":"debug","message":"Executing (default): SELECT t.typname enum_name, array_agg(e.enumlabel ORDER BY enumsortorder) enum_value FROM pg_type t JOIN pg_enum e ON t.oid = e.enumtypid JOIN pg_catalog.pg_namespace n ON n.oid = t.typnamespace WHERE n.nspname = 'public' AND t.typname='enum_Users_role' GROUP BY 1","service":"campus-one-backend","timestamp":"2026-02-27 11:59:37"}
+{"level":"debug","message":"Executing (default): SELECT i.relname AS name, ix.indisprimary AS primary, ix.indisunique AS unique, ix.indkey AS indkey, array_agg(a.attnum) as column_indexes, array_agg(a.attname) AS column_names, pg_get_indexdef(ix.indexrelid) AS definition FROM pg_class t, pg_class i, pg_index ix, pg_attribute a WHERE t.oid = ix.indrelid AND i.oid = ix.indexrelid AND a.attrelid = t.oid AND t.relkind = 'r' and t.relname = 'Users' GROUP BY i.relname, ix.indexrelid, ix.indisprimary, ix.indisunique, ix.indkey ORDER BY i.relname;","service":"campus-one-backend","timestamp":"2026-02-27 11:59:37"}
+{"level":"debug","message":"Executing (default): SELECT \"id\", \"name\", \"email\", \"password\", \"role\", \"department\", \"isActive\", \"createdAt\", \"updatedAt\" FROM \"Users\" AS \"User\" WHERE \"User\".\"email\" = 'admin@campusone.edu';","service":"campus-one-backend","timestamp":"2026-02-27 12:00:11"}
+{"level":"debug","message":"Executing (default): SELECT \"id\", \"name\", \"email\", \"password\", \"role\", \"department\", \"isActive\", \"createdAt\", \"updatedAt\" FROM \"Users\" AS \"User\" WHERE \"User\".\"email\" = 'admin@campusone.edu';","service":"campus-one-backend","timestamp":"2026-02-27 12:01:37"}
+{"level":"debug","message":"Executing (default): SELECT \"id\", \"name\", \"email\", \"password\", \"role\", \"department\", \"isActive\", \"createdAt\", \"updatedAt\" FROM \"Users\" AS \"User\" WHERE \"User\".\"email\" = 'admin@campusone.edu';","service":"campus-one-backend","timestamp":"2026-02-27 13:05:38"}
+{"level":"debug","message":"Executing (default): SELECT \"id\", \"name\", \"email\", \"password\", \"role\", \"department\", \"isActive\", \"createdAt\", \"updatedAt\" FROM \"Users\" AS \"User\" WHERE \"User\".\"email\" = 'admin@campusone.edu';","service":"campus-one-backend","timestamp":"2026-02-27 13:06:17"}
+{"level":"debug","message":"Executing (default): SELECT \"id\", \"name\", \"email\", \"password\", \"role\", \"department\", \"isActive\", \"createdAt\", \"updatedAt\" FROM \"Users\" AS \"User\" WHERE \"User\".\"email\" = 'admin@campusone.edu';","service":"campus-one-backend","timestamp":"2026-02-27 13:07:34"}
+{"level":"debug","message":"Executing (default): SELECT \"id\", \"name\", \"email\", \"password\", \"role\", \"department\", \"isActive\", \"createdAt\", \"updatedAt\" FROM \"Users\" AS \"User\" WHERE \"User\".\"email\" = 'admin@campusone.edu';","service":"campus-one-backend","timestamp":"2026-02-27 13:07:49"}
+{"level":"debug","message":"Executing (default): SELECT \"id\", \"name\", \"email\", \"password\", \"role\", \"department\", \"isActive\", \"createdAt\", \"updatedAt\" FROM \"Users\" AS \"User\" WHERE \"User\".\"email\" = 'admin@campusone.edu';","service":"campus-one-backend","timestamp":"2026-02-27 13:08:47"}
+{"level":"debug","message":"Executing (default): SELECT \"id\", \"name\", \"email\", \"password\", \"role\", \"department\", \"isActive\", \"createdAt\", \"updatedAt\" FROM \"Users\" AS \"User\" WHERE \"User\".\"email\" = 'admin@campusone.edu';","service":"campus-one-backend","timestamp":"2026-02-27 13:10:44"}
+{"level":"debug","message":"Executing (default): SELECT \"id\", \"name\", \"email\", \"password\", \"role\", \"department\", \"isActive\", \"createdAt\", \"updatedAt\" FROM \"Users\" AS \"User\" WHERE \"User\".\"email\" = 'admin@campusone.edu';","service":"campus-one-backend","timestamp":"2026-02-27 13:11:19"}
+{"level":"debug","message":"Executing (default): SELECT \"id\", \"name\", \"email\", \"password\", \"role\", \"department\", \"isActive\", \"createdAt\", \"updatedAt\" FROM \"Users\" AS \"User\" WHERE \"User\".\"email\" = 'admin@campusone.edu';","service":"campus-one-backend","timestamp":"2026-02-27 13:14:50"}
+{"level":"debug","message":"Executing (default): SELECT \"id\", \"name\", \"email\", \"password\", \"role\", \"department\", \"isActive\", \"createdAt\", \"updatedAt\" FROM \"Users\" AS \"User\" WHERE \"User\".\"email\" = 'admin@campusone.edu';","service":"campus-one-backend","timestamp":"2026-02-27 13:16:21"}
+{"level":"debug","message":"Executing (default): SELECT \"id\", \"name\", \"email\", \"password\", \"role\", \"department\", \"isActive\", \"createdAt\", \"updatedAt\" FROM \"Users\" AS \"User\" WHERE \"User\".\"email\" = 'admin@campusone.edu';","service":"campus-one-backend","timestamp":"2026-02-27 13:17:51"}
+{"level":"error","message":"Unable to connect to the database:","name":"SequelizeConnectionRefusedError","original":{"code":"ECONNREFUSED"},"parent":{"code":"ECONNREFUSED"},"service":"campus-one-backend","stack":"SequelizeConnectionRefusedError\n    at Client._connectionCallback (/Volumes/My Files/Projects/CampusOne/backend/node_modules/sequelize/lib/dialects/postgres/connection-manager.js:133:24)\n    at Client._handleErrorWhileConnecting (/Volumes/My Files/Projects/CampusOne/backend/node_modules/pg/lib/client.js:379:19)\n    at Client._handleErrorEvent (/Volumes/My Files/Projects/CampusOne/backend/node_modules/pg/lib/client.js:389:19)\n    at Connection.emit (node:events:508:28)\n    at Socket.reportStreamError (/Volumes/My Files/Projects/CampusOne/backend/node_modules/pg/lib/connection.js:56:12)\n    at Socket.emit (node:events:508:28)\n    at emitErrorNT (node:internal/streams/destroy:170:8)\n    at emitErrorCloseNT (node:internal/streams/destroy:129:3)\n    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)","timestamp":"2026-03-02 17:16:07"}
+{"level":"debug","message":"Executing (default): SELECT 1+1 AS result","service":"campus-one-backend","timestamp":"2026-03-02 17:16:36"}
+{"level":"debug","message":"Executing (default): SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'Users'","service":"campus-one-backend","timestamp":"2026-03-02 17:16:36"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 17:16:36"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 17:16:36"}
+{"level":"debug","message":"Executing (default): SELECT t.typname enum_name, array_agg(e.enumlabel ORDER BY enumsortorder) enum_value FROM pg_type t JOIN pg_enum e ON t.oid = e.enumtypid JOIN pg_catalog.pg_namespace n ON n.oid = t.typnamespace WHERE n.nspname = 'public' AND t.typname='enum_Users_role' GROUP BY 1","service":"campus-one-backend","timestamp":"2026-03-02 17:16:36"}
+{"level":"debug","message":"Executing (default): SELECT i.relname AS name, ix.indisprimary AS primary, ix.indisunique AS unique, ix.indkey AS indkey, array_agg(a.attnum) as column_indexes, array_agg(a.attname) AS column_names, pg_get_indexdef(ix.indexrelid) AS definition FROM pg_class t, pg_class i, pg_index ix, pg_attribute a WHERE t.oid = ix.indrelid AND i.oid = ix.indexrelid AND a.attrelid = t.oid AND t.relkind = 'r' and t.relname = 'Users' GROUP BY i.relname, ix.indexrelid, ix.indisprimary, ix.indisunique, ix.indkey ORDER BY i.relname;","service":"campus-one-backend","timestamp":"2026-03-02 17:16:36"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 17:19:59"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 17:19:59"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 17:22:16"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 17:22:16"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 17:30:03"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 17:30:03"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 17:30:05"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 17:30:05"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 17:33:11"}
+{"level":"info","message":"Faculty account created: faculty@campusone.edu / password123","service":"campus-one-backend","timestamp":"2026-03-02 17:33:11"}
+{"level":"info","message":"Student account created: student@campusone.edu / password123","service":"campus-one-backend","timestamp":"2026-03-02 17:33:11"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:04:57"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:04:57"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:05:07"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:05:07"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:05:44"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:05:44"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:05:46"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:05:46"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:06:09"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:06:09"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:06:25"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:06:25"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:06:27"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:06:27"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:06:39"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:06:39"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:09:23"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:09:23"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:09:25"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:09:25"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:10:52"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:10:52"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:10:54"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:10:54"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:12:21"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:12:21"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:12:22"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:12:22"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:12:24"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:12:24"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:12:40"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:12:40"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:12:42"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:12:42"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:12:44"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:12:44"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:12:46"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:12:46"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:13:27"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:13:27"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:13:29"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:13:29"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:13:33"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:13:33"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:13:35"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:13:35"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:13:43"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:13:43"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:13:45"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:13:45"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:14:27"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:14:27"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:14:29"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:14:29"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:14:31"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:14:31"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:14:33"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:14:33"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:14:44"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:14:44"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:14:46"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:14:46"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:14:48"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:14:48"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:15:47"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:15:47"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:16:42"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:16:42"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:19:38"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:19:38"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 20:19:40"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 20:19:40"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 21:18:03"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 21:18:03"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 21:18:10"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 21:18:10"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 21:18:36"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 21:18:36"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 21:20:13"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 21:20:13"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 21:20:45"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 21:20:45"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 21:20:45"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 21:20:45"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 21:20:45"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 21:20:45"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 21:24:00"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 21:24:00"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 21:24:00"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 21:24:00"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 21:24:00"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 21:24:00"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 21:31:32"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 21:31:32"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 21:31:32"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 21:31:32"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 21:31:32"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 21:31:32"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 21:36:32"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 21:36:32"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 21:36:32"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 21:36:32"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 21:36:32"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 21:36:32"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 21:39:31"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 21:39:31"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 21:42:02"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 21:42:02"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 21:44:26"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 21:44:26"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 21:44:28"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 21:44:28"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 21:44:43"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 21:44:43"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 21:44:45"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 21:44:45"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 21:44:47"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 21:44:47"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 22:00:27"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 22:00:27"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 22:20:18"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 22:20:18"}

@@ -1,20 +1,33 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
-export const useAuthStore = create((set) => ({
-    user: null,
-    token: null,
-    isAuthenticated: false,
+export const useAuthStore = create(
+    persist(
+        (set) => ({
+            user: null,
+            token: null,
+            isAuthenticated: false,
+            _hasHydrated: false,
 
-    setAuth: (user, token) => set({
-        user,
-        token,
-        isAuthenticated: !!user
-    }),
+            setAuth: (user, token) => set({
+                user,
+                token,
+                isAuthenticated: !!user
+            }),
 
-    setToken: (token) => set({ token }),
+            setToken: (token) => set({ token }),
 
-    logout: () => {
-        set({ user: null, token: null, isAuthenticated: false });
-        // Backend call to clear refresh cookie should be done in the component/action
-    }
-}));
+            setHasHydrated: (state) => set({ _hasHydrated: state }),
+
+            logout: () => {
+                set({ user: null, token: null, isAuthenticated: false });
+            }
+        }),
+        {
+            name: 'auth-storage',
+            onRehydrateStorage: () => (state) => {
+                state.setHasHydrated(true);
+            }
+        }
+    )
+);

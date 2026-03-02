@@ -1,97 +1,107 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
 
-:root {
-  /* Colors - Light Mode */
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
-  --bg-main: #f8fafc;
-  --bg-sidebar: #ffffff;
-  --bg-card: #ffffff;
-  --text-main: #1e293b;
-  --text-muted: #64748b;
-  --border: #e2e8f0;
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.3);
-  
-  /* Layout */
-  --sidebar-width: 260px;
-  --sidebar-collapsed-width: 80px;
-  --navbar-height: 70px;
-  
-  /* Shadows & Radius */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+@theme {
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-bg-main: var(--bg-main);
+  --color-bg-sidebar: var(--bg-sidebar);
+  --color-bg-card: var(--bg-card);
+  --color-text-main: var(--text-main);
+  --color-text-muted: var(--text-muted);
+  --color-border-custom: var(--border);
+  --color-glass-bg: var(--glass-bg);
+  --color-glass-border: var(--glass-border);
+
+  --font-inter: 'Inter', sans-serif;
+  --font-outfit: 'Outfit', sans-serif;
+
+  --spacing-sidebar: 260px;
+  --spacing-sidebar-collapsed: 80px;
+  --spacing-navbar: 70px;
+
   --radius-lg: 12px;
   --radius-xl: 16px;
-  
-  transition: background-color 0.3s ease, color 0.3s ease;
+
+  --animate-skeleton-shimmer: skeleton-shimmer 2s infinite linear;
+
+  @keyframes skeleton-shimmer {
+    from {
+      background-position: 200% 0;
+    }
+
+    to {
+      background-position: -200% 0;
+    }
+  }
 }
 
-.dark {
-  /* Colors - Dark Mode */
-  --bg-main: #0f172a;
-  --bg-sidebar: #1e293b;
-  --bg-card: #1e293b;
-  --text-main: #f1f5f9;
-  --text-muted: #94a3b8;
-  --border: #334155;
-  --glass-bg: rgba(30, 41, 59, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.1);
+@layer base {
+  :root {
+    /* Colors - Light Mode */
+    --bg-main: #f8fafc;
+    --bg-sidebar: #ffffff;
+    --bg-card: #ffffff;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.3);
+  }
+
+  .dark {
+    /* Colors - Dark Mode */
+    --bg-main: #0f172a;
+    --bg-sidebar: #1e293b;
+    --bg-card: #1e293b;
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
+    --border: #334155;
+    --glass-bg: rgba(30, 41, 59, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.1);
+  }
+
+  body {
+    @apply font-inter bg-bg-main text-text-main antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-outfit;
+  }
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@layer components {
+  .glass {
+    @apply bg-glass-bg border border-glass-border backdrop-blur-xl;
+  }
 }
 
-body {
-  font-family: 'Inter', sans-serif;
-  background-color: var(--bg-main);
-  color: var(--text-main);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Custom Scrollbar Utilities */
+@utility scroller {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+  }
 }
 
-h1, h2, h3, h4 {
-  font-family: 'Outfit', sans-serif;
+@utility skeleton {
+  animation: var(--animate-skeleton-shimmer);
+  background: linear-gradient(90deg, var(--border) 25%, var(--bg-card) 50%, var(--border) 75%);
+  background-size: 200% 100%;
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-ul {
-  list-style: none;
-}
-
-button {
-  cursor: pointer;
-  border: none;
-  outline: none;
-  background: none;
-}
-
-/* Glassmorphism Utility */
-.glass {
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
-}
-
-/* Scroller */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 10px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap');

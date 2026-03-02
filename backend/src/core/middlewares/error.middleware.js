@@ -19,7 +19,7 @@ const globalErrorHandler = (err, req, res, next) => {
                 message: err.message,
             });
         } else {
-            logger.error('ERROR 💥', err);
+            logger.error('ERROR ', err);
             res.status(500).json({
                 status: 'error',
                 message: 'Something went very wrong!',

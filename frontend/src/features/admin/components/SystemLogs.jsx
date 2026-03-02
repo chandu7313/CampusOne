@@ -1,67 +1,41 @@
-import { CheckCircle, AlertCircle, RefreshCw, User, Shield } from 'lucide-react';
+import React from 'react';
+import { Activity, Shield, LogIn, UserPlus, AlertCircle } from 'lucide-react';
 
-const logs = [
-  { time: '14:02', message: 'Backup completed successfully', type: 'success', icon: CheckCircle },
-  { time: '13:58', message: 'User login: Prof. Evans', type: 'info', icon: User },
-  { time: '13:45', message: 'Security alert: Minor', type: 'warning', icon: AlertCircle },
-  { time: '13:20', message: 'Database sync complete', type: 'success', icon: RefreshCw },
-  { time: '12:55', message: 'Server load stabilized', type: 'success', icon: CheckCircle },
-  { time: '12:10', message: 'API request failed (Retry successful)', type: 'warning', icon: AlertCircle },
-];
-
-const SystemLogs = () => {
-  return (
-    <div className="glass" style={{ padding: '24px', borderRadius: '16px', height: '100%' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <h3 style={{ fontSize: '1.25rem', fontWeight: '600' }}>System Logs</h3>
-        <Shield size={18} style={{ color: 'var(--text-muted)' }} />
-      </div>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        {logs.map((log, index) => {
-          const Icon = log.icon;
-          const color = log.type === 'success' ? '#10b981' : log.type === 'warning' ? '#f59e0b' : '#2563eb';
-          
-          return (
-            <div key={index} style={{ display: 'flex', gap: '16px' }}>
-              <div style={{ 
-                width: '32px', 
-                height: '32px', 
-                borderRadius: '8px', 
-                background: `${color}15`, 
-                color: color,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0
-              }}>
-                <Icon size={16} />
-              </div>
-              <div style={{ flex: 1 }}>
-                <p style={{ fontSize: '0.875rem', fontWeight: '500', color: 'var(--text-main)' }}>{log.message}</p>
-                <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'monospace' }}>{log.time}</p>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      
-      <button style={{ 
-        width: '100%', 
-        padding: '12px', 
-        marginTop: '24px', 
-        borderRadius: '8px', 
-        border: '1px solid var(--border)',
-        background: 'transparent',
-        color: 'var(--text-main)',
-        fontSize: '0.875rem',
-        fontWeight: '500',
-        cursor: 'pointer'
-      }}>
-        View All Logs
-      </button>
-    </div>
-  );
+const getLogIcon = (action) => {
+    switch (action) {
+        case 'LOGIN_SUCCESS': return <LogIn size={16} className="text-blue-500" />;
+        case 'USER_CREATE': return <UserPlus size={16} className="text-emerald-500" />;
+        case 'CONFIG_UPDATE': return <Shield size={16} className="text-purple-500" />;
+        case 'LOGIN_FAIL': return <AlertCircle size={16} className="text-rose-500" />;
+        default: return <Activity size={16} className="text-white/40" />;
+    }
 };
+
+const SystemLogs = ({ logs = [] }) => (
+    <div className="glass rounded-[20px] h-[400px] overflow-hidden flex flex-col">
+        <h3 className="text-[1.1rem] font-semibold text-white/90 p-5 pb-2.5">System Activity Logs</h3>
+        <div className="flex-1 overflow-y-auto scroller p-[0_20px_20px]">
+            {logs.length > 0 ? logs.map((log) => (
+                <div key={log.id} className="flex items-center gap-3 py-3 border-b border-white/5 last:border-0">
+                    <div className="shrink-0">
+                        {getLogIcon(log.action)}
+                    </div>
+                    <div className="flex-1">
+                        <p className="text-sm text-white m-0">
+                            {log.action.replace(/_/g, ' ')}
+                        </p>
+                        <p className="text-xs text-white/40 m-0">
+                            {log.user?.name || 'System'} • {new Date(log.createdAt).toLocaleTimeString()}
+                        </p>
+                    </div>
+                </div>
+            )) : (
+                <p className="text-white/40 text-center pt-10">
+                    No recent activities
+                </p>
+            )}
+        </div>
+    </div>
+);
 
 export default SystemLogs;
