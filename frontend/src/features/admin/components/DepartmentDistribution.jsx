@@ -6,7 +6,7 @@ const COLORS = ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981'];
 const DepartmentDistribution = ({ data = [] }) => {
     return (
         <div className="glass rounded-[20px] h-[350px] p-5 mt-5">
-            <h3 className="text-[1.1rem] font-semibold text-white/90">Departmental Distribution</h3>
+            <h3 className="text-[1.1rem] font-semibold text-text-main">Departmental Distribution</h3>
             <div className="w-full h-[280px]">
                 <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
@@ -25,10 +25,10 @@ const DepartmentDistribution = ({ data = [] }) => {
                         </Pie>
                         <Tooltip 
                             contentStyle={{ 
-                                backgroundColor: 'rgba(17, 24, 39, 0.8)', 
-                                border: '1px solid rgba(255,255,255,0.1)',
+                                backgroundColor: 'var(--bg-card)', 
+                                border: '1px solid var(--border)',
                                 borderRadius: '8px',
-                                color: '#fff'
+                                color: 'var(--text-main)'
                             }}
                         />
                         <Legend wrapperStyle={{ paddingTop: '20px' }} />

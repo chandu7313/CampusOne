@@ -218,3 +218,25 @@
 {"level":"error","message":"Unable to connect to the database: self-signed certificate in certificate chain","name":"SequelizeConnectionError","original":{"code":"SELF_SIGNED_CERT_IN_CHAIN"},"parent":{"code":"SELF_SIGNED_CERT_IN_CHAIN"},"service":"campus-one-backend","stack":"SequelizeConnectionError: self-signed certificate in certificate chain\n    at Client._connectionCallback (/Volumes/My Files/Projects/CampusOne/backend/node_modules/sequelize/lib/dialects/postgres/connection-manager.js:145:24)\n    at Client._handleErrorWhileConnecting (/Volumes/My Files/Projects/CampusOne/backend/node_modules/pg/lib/client.js:379:19)\n    at Client._handleErrorEvent (/Volumes/My Files/Projects/CampusOne/backend/node_modules/pg/lib/client.js:389:19)\n    at Connection.emit (node:events:508:28)\n    at TLSSocket.reportStreamError (/Volumes/My Files/Projects/CampusOne/backend/node_modules/pg/lib/connection.js:56:12)\n    at TLSSocket.emit (node:events:508:28)\n    at emitErrorNT (node:internal/streams/destroy:170:8)\n    at emitErrorCloseNT (node:internal/streams/destroy:129:3)\n    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)","timestamp":"2026-03-02 23:53:45"}
 {"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-02 23:54:13"}
 {"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-02 23:54:13"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-03 17:40:07"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-03 17:40:07"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-03 17:42:52"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-03 17:42:52"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-03 18:22:01"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-03 18:22:01"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-03 18:22:40"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-03 18:22:40"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-03 18:23:47"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-03 18:23:47"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-03 18:24:08"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-03 18:24:08"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-03 18:49:53"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-03 18:49:53"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-03 18:50:57"}
+{"level":"info","message":"Server running on port 4000 in development mode","service":"campus-one-backend","timestamp":"2026-03-03 18:50:57"}
+{"level":"info","message":"PostgreSQL connected successfully.","service":"campus-one-backend","timestamp":"2026-03-03 18:51:02"}
+{"level":"info","message":"Syncing database schema...","service":"campus-one-backend","timestamp":"2026-03-03 18:51:02"}
+{"level":"info","message":"Database schema synced successfully.","service":"campus-one-backend","timestamp":"2026-03-03 18:51:02"}
+{"level":"info","message":"Admin account created: admin@campusone.edu / adminpassword123","service":"campus-one-backend","timestamp":"2026-03-03 18:51:03"}
+{"level":"info","message":"Faculty account already exists.","service":"campus-one-backend","timestamp":"2026-03-03 18:51:03"}
+{"level":"info","message":"Student account already exists.","service":"campus-one-backend","timestamp":"2026-03-03 18:51:03"}

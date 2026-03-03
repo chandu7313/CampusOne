@@ -4,7 +4,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 const RevenueChart = ({ data }) => {
     return (
         <div className="glass rounded-[20px] h-[350px] p-5">
-            <h3 className="text-[1.1rem] font-semibold text-white/90">Revenue Trends</h3>
+            <h3 className="text-[1.1rem] font-semibold text-text-main">Revenue Trends</h3>
             <div className="w-full h-[280px] mt-2.5">
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={data || []}>
@@ -14,16 +14,16 @@ const RevenueChart = ({ data }) => {
                                 <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
                             </linearGradient>
                         </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                        <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.1} />
                         <XAxis 
                             dataKey="month" 
-                            stroke="rgba(255,255,255,0.4)" 
+                            stroke="var(--text-muted)" 
                             fontSize={12}
                             tickLine={false}
                             axisLine={false}
                         />
                         <YAxis 
-                            stroke="rgba(255,255,255,0.4)" 
+                            stroke="var(--text-muted)" 
                             fontSize={12}
                             tickLine={false}
                             axisLine={false}
@@ -31,11 +31,12 @@ const RevenueChart = ({ data }) => {
                         />
                         <Tooltip 
                             contentStyle={{ 
-                                backgroundColor: 'rgba(17, 24, 39, 0.8)', 
-                                border: '1px solid rgba(255,255,255,0.1)',
+                                backgroundColor: 'var(--bg-card)', 
+                                border: '1px solid var(--border)',
                                 borderRadius: '8px',
-                                color: '#fff'
+                                color: 'var(--text-main)'
                             }}
+                            itemStyle={{ color: 'var(--text-main)' }}
                         />
                         <Area 
                             type="monotone" 

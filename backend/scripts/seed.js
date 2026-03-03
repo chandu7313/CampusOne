@@ -12,6 +12,21 @@ const seedUsers = async () => {
         await sequelize.sync({ alter: true });
         logger.info('Database schema synced successfully.');
 
+        // Create Admin Account
+        const adminExists = await User.findOne({ where: { email: 'admin@campusone.edu' } });
+        if (!adminExists) {
+            await User.create({
+                name: 'System Admin',
+                email: 'admin@campusone.edu',
+                password: 'adminpassword123',
+                role: 'Admin',
+                department: 'Administration'
+            });
+            logger.info('Admin account created: admin@campusone.edu / adminpassword123');
+        } else {
+            logger.info('Admin account already exists.');
+        }
+
         // Create Faculty Account
         const facultyExists = await User.findOne({ where: { email: 'faculty@campusone.edu' } });
         if (!facultyExists) {
@@ -26,7 +41,6 @@ const seedUsers = async () => {
         } else {
             logger.info('Faculty account already exists.');
         }
-
         // Create Student Account
         const studentExists = await User.findOne({ where: { email: 'student@campusone.edu' } });
         if (!studentExists) {

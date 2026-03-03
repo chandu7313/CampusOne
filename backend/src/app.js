@@ -41,6 +41,14 @@ app.use('/api/v1/students', studentRoutes);
 app.use('/api/v1/finance-admin', financeRoutes); // Using finance-admin to distinguish from student finance
 
 // Health check
+app.get('/', (req, res) => {
+    res.status(200).json({
+        status: 'success',
+        message: 'Welcome to CampusOne API',
+        version: '1.0.0'
+    });
+});
+
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'ok' });
 });

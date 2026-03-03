@@ -18,10 +18,10 @@ const AdminDashboard = () => {
         <div className="flex flex-col gap-8 pb-8">
             <header className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-[clamp(1.5rem,5vw,2rem)] font-bold m-0 bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
+                    <h1 className="text-[clamp(1.5rem,5vw,2rem)] font-bold m-0 text-text-main">
                         Admin Dashboard
                     </h1>
-                    <p className="text-white/50 text-[0.95rem] mt-1">System Overview & Institutional Analytics</p>
+                    <p className="text-text-muted text-[0.95rem] mt-1">System Overview & Institutional Analytics</p>
                 </div>
             </header>
 
@@ -64,25 +64,25 @@ const AdminDashboard = () => {
                     <SystemLogs logs={stats?.recentLogs} />
                     
                     <div className="glass rounded-[20px] p-6">
-                        <h3 className="text-[1.1rem] font-semibold mb-5 text-white/90">Quick Actions</h3>
+                        <h3 className="text-[1.1rem] font-semibold mb-5 text-text-main">Quick Actions</h3>
                         <div className="grid grid-cols-[repeat(auto-fill,minmax(130px,1fr))] gap-3">
-                            <button className="flex items-center justify-center gap-2 p-2.5 rounded-xl border border-white/10 bg-white/2 text-white/80 text-[0.85rem] font-medium transition-all duration-200 hover:bg-white/8 hover:border-white/20 hover:text-white hover:-translate-y-0.5 cursor-pointer">
+                            <button className="flex items-center justify-center gap-2 p-2.5 rounded-xl border border-border-custom bg-bg-card/50 text-text-main text-[0.85rem] font-medium transition-all duration-200 hover:bg-bg-card hover:border-primary/30 hover:text-primary cursor-pointer">
                                 <UserPlus size={16} /> Add Student
                             </button>
-                            <button className="flex items-center justify-center gap-2 p-2.5 rounded-xl border border-white/10 bg-white/2 text-white/80 text-[0.85rem] font-medium transition-all duration-200 hover:bg-white/8 hover:border-white/20 hover:text-white hover:-translate-y-0.5 cursor-pointer">
+                            <button className="flex items-center justify-center gap-2 p-2.5 rounded-xl border border-border-custom bg-bg-card/50 text-text-main text-[0.85rem] font-medium transition-all duration-200 hover:bg-bg-card hover:border-primary/30 hover:text-primary cursor-pointer">
                                 <FileText size={16} /> Generate Report
                             </button>
-                            <button className="flex items-center justify-center gap-2 p-2.5 rounded-xl border border-white/10 bg-white/2 text-white/80 text-[0.85rem] font-medium transition-all duration-200 hover:bg-white/8 hover:border-white/20 hover:text-white hover:-translate-y-0.5 cursor-pointer">
+                            <button className="flex items-center justify-center gap-2 p-2.5 rounded-xl border border-border-custom bg-bg-card/50 text-text-main text-[0.85rem] font-medium transition-all duration-200 hover:bg-bg-card hover:border-primary/30 hover:text-primary cursor-pointer">
                                 <Shield size={16} /> Manage Roles
                             </button>
-                            <button className="flex items-center justify-center gap-2 p-2.5 rounded-xl border border-white/10 bg-white/2 text-white/80 text-[0.85rem] font-medium transition-all duration-200 hover:bg-white/8 hover:border-white/20 hover:text-white hover:-translate-y-0.5 cursor-pointer">
+                            <button className="flex items-center justify-center gap-2 p-2.5 rounded-xl border border-border-custom bg-bg-card/50 text-text-main text-[0.85rem] font-medium transition-all duration-200 hover:bg-bg-card hover:border-primary/30 hover:text-primary cursor-pointer">
                                 <Archive size={16} /> Audit Trail
                             </button>
                         </div>
                     </div>
                     
                     <div className="glass rounded-[20px] p-6">
-                        <h3 className="text-[1.1rem] font-semibold mb-5 text-white/90">Test File Upload</h3>
+                        <h3 className="text-[1.1rem] font-semibold mb-5 text-text-main">Test File Upload</h3>
                         <FileUpload />
                     </div>
                 </div>
