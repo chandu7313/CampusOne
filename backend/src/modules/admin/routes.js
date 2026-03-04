@@ -12,10 +12,13 @@ router.use(authorize('Admin'));
 router.get('/stats', adminController.getDashboardStats);
 router.get('/logs', adminController.getActivityLogs);
 
+import { uploadSingle } from '../../core/middlewares/upload.middleware.js';
+
 // User Management
 router.get('/users', adminController.getUsers);
-router.post('/users', adminController.createUser);
+router.post('/users', uploadSingle('avatar'), adminController.createUser);
 router.patch('/users/:id/status', adminController.toggleUserStatus);
+
 
 // System Configuration
 router.get('/config', adminController.getSystemConfigs);

@@ -1,12 +1,13 @@
 import {
-    User, AuditLog, SystemConfig,
-    StudentProfile, Department, StudentFee
+    User, FacultyProfile, HODProfile, StaffProfile, AuditLog, SystemConfig,
+    StudentProfile, Department, StudentFee, Program
 } from '../../../models/index.js';
 import catchAsync from '../../../utils/catchAsync.js';
 import AppError from '../../../utils/appError.js';
 import { logAudit } from '../utils/audit.util.js';
 import { Op } from 'sequelize';
 import { sequelize } from '../../../config/database.js';
+import { uploadImage } from '../../../utils/cloudinary.js';
 
 /**
  * Get aggregated institutional statistics for the Admin Dashboard
@@ -32,20 +33,20 @@ export const getDashboardStats = catchAsync(async (req, res, next) => {
     // 3. Department Distribution
     const departmentDistribution = await StudentProfile.findAll({
         attributes: [
-            [sequelize.col('program->department.name'), 'department'],
+            [sequelize.col('program.department.name'), 'department'],
             [sequelize.fn('count', sequelize.col('StudentProfile.id')), 'count']
         ],
         include: [{
-            model: sequelize.models.Program,
+            model: Program,
             as: 'program',
             attributes: [],
             include: [{
-                model: sequelize.models.Department,
+                model: Department,
                 as: 'department',
                 attributes: []
             }]
         }],
-        group: [sequelize.col('program->department.name')],
+        group: [sequelize.col('program.department.name')],
         raw: true
     });
 
@@ -129,16 +130,19 @@ export const getActivityLogs = catchAsync(async (req, res, next) => {
  * List all users with pagination and filters
  */
 export const getUsers = catchAsync(async (req, res, next) => {
-    const { page = 1, limit = 10, search, role, isActive } = req.query;
+    const { page = 1, limit = 10, search, role, isActive, department } = req.query;
     const offset = (page - 1) * limit;
 
     const where = {};
     if (role) where.role = role;
-    if (isActive !== undefined) where.isActive = isActive === 'true';
+    if (department) where.department = department;
+    if (isActive !== undefined && isActive !== '') where.isActive = isActive === 'true';
     if (search) {
         where[Op.or] = [
-            { name: { [Op.iLike]: `%${search}%` } },
-            { email: { [Op.iLike]: `%${search}%` } }
+            { firstName: { [Op.iLike]: `%${search}%` } },
+            { lastName: { [Op.iLike]: `%${search}%` } },
+            { email: { [Op.iLike]: `%${search}%` } },
+            { registrationNumber: { [Op.iLike]: `%${search}%` } }
         ];
     }
 
@@ -165,30 +169,94 @@ export const getUsers = catchAsync(async (req, res, next) => {
  * Create a new user (Admin-only creation)
  */
 export const createUser = catchAsync(async (req, res, next) => {
-    const { name, email, password, role, department } = req.body;
+    const {
+        firstName, middleName, lastName, email, password, role, department,
+        mobile, gender, dob, ...profileData
+    } = req.body;
+
+    // Handle Image Upload if file exists
+    let avatarUrl = null;
+    if (req.file) {
+        const uploadResult = await uploadImage(req.file.buffer);
+        avatarUrl = uploadResult.secure_url;
+    }
 
     // Prevent privilege escalation: only SuperAdmin can create other Admins via API 
     // (Simulated for now, we'll assume the primary admin is performing this)
-    if (role === 'Admin' && req.user.email !== 'admin@campusone.edu') {
-        return next(new AppError('Unauthorized: You cannot create administrative accounts', 403));
+    if (role === 'Admin' || role === 'Super Admin') {
+        if (req.user && req.user.email !== 'admin@campusone.edu') {
+            return next(new AppError('Unauthorized: You cannot create high-level administrative accounts', 403));
+        }
     }
 
-    const user = await User.create({
-        name,
-        email,
-        password,
-        role,
-        department
+    // 2. Execute within a Transaction
+    const result = await sequelize.transaction(async (t) => {
+        // Create the base User
+        const user = await User.create({
+            name: `${firstName} ${lastName}`, // Legacy fallback
+            firstName,
+            middleName,
+            lastName,
+            email,
+            password,
+            role,
+            department,
+            mobile,
+            gender,
+            dob,
+            avatar: avatarUrl,
+            createdBy: req.user ? req.user.id : null
+        }, { transaction: t });
+
+        // Handle Role-Specific Profiles dynamically
+        if (role === 'Student') {
+            await StudentProfile.create({
+                userId: user.id,
+                rollNumber: profileData.rollNumber,
+                programId: profileData.programId,
+                batchYear: profileData.batchYear
+            }, { transaction: t });
+        } else if (role === 'Faculty') {
+            await FacultyProfile.create({
+                userId: user.id,
+                employeeId: profileData.employeeId,
+                designation: profileData.designation,
+                specialization: profileData.specialization,
+                joiningDate: profileData.joiningDate
+            }, { transaction: t });
+        } else if (role === 'HOD') {
+            await HODProfile.create({
+                userId: user.id,
+                employeeId: profileData.employeeId,
+                departmentId: profileData.departmentId,
+                officeContact: profileData.officeContact
+            }, { transaction: t });
+        } else if (['Librarian', 'Hostel Warden', 'Lab Assistant', 'IT Support Staff', 'Finance Officer'].includes(role)) {
+            await StaffProfile.create({
+                userId: user.id,
+                employeeId: profileData.employeeId,
+                department: department,
+                designation: role,
+                labAssigned: profileData.labAssigned,
+                hostelAssigned: profileData.hostelAssigned,
+                shiftTiming: profileData.shiftTiming,
+                financeRoleLevel: profileData.financeRoleLevel,
+                approvalLimit: profileData.approvalLimit
+            }, { transaction: t });
+        }
+
+        return user;
     });
 
     res.status(201).json({
         status: 'success',
         data: {
             user: {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                role: user.role
+                id: result.id,
+                name: result.name || `${result.firstName} ${result.lastName}`,
+                email: result.email,
+                role: result.role,
+                registrationNumber: result.registrationNumber
             }
         }
     });
@@ -196,7 +264,7 @@ export const createUser = catchAsync(async (req, res, next) => {
     await logAudit({
         action: 'USER_CREATE',
         resource: 'User',
-        resourceId: user.id,
+        resourceId: result.id,
         metadata: { createdRole: role }
     }, req);
 });
