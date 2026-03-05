@@ -7,11 +7,12 @@ const colorStyles = {
     amber: 'bg-amber-500/10 text-amber-500'
 };
 
-const StatCard = ({ title, value, icon: Icon, trend, color = 'blue' }) => {
+const StatCard = ({ title, value, icon, trend, color = 'blue' }) => {
+    const IconComponent = icon;
     return (
         <div className="glass bg-bg-card/50 border border-border-custom rounded-2xl p-6 flex items-center gap-5 transition-all duration-300 min-w-[240px] hover:shadow-xl group">
             <div className={`w-14 h-14 rounded-xl flex items-center justify-center shrink-0 ${colorStyles[color] || colorStyles.blue}`}>
-                <Icon size={24} />
+                <IconComponent size={24} />
             </div>
             <div className="flex flex-col">
                 <p className="text-text-muted text-sm font-medium m-0">{title}</p>

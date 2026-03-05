@@ -12,10 +12,18 @@ const StudentProfile = sequelize.define('StudentProfile', {
         allowNull: false,
         unique: true,
     },
+    registrationNumber: {
+        type: DataTypes.STRING,
+        unique: true,
+    },
     rollNumber: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true, // Can be assigned after admission
         unique: true,
+    },
+    admissionDate: {
+        type: DataTypes.DATEONLY,
+        defaultValue: DataTypes.NOW,
     },
     programId: {
         type: DataTypes.UUID,
@@ -28,6 +36,10 @@ const StudentProfile = sequelize.define('StudentProfile', {
     currentSemester: {
         type: DataTypes.INTEGER,
         defaultValue: 1,
+    },
+    isFullPaid: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
     },
     status: {
         type: DataTypes.ENUM('Active', 'Suspended', 'Graduated', 'Withdrawn'),

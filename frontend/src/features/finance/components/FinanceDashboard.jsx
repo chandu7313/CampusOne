@@ -2,11 +2,13 @@ import { DollarSign, TrendingUp, AlertCircle, FileCheck } from 'lucide-react';
 import TransactionTable from './TransactionTable';
 import InstallmentTracker from './InstallmentTracker';
 
-const FinanceCard = ({ icon: Icon, label, value, subtext, color }) => (
+const FinanceCard = ({ icon, label, value, subtext, color }) => {
+  const IconComponent = icon;
+  return (
   <div className="glass" style={{ padding: '24px', borderRadius: '16px', flex: 1, minWidth: '280px' }}>
     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
       <div style={{ padding: '12px', background: `${color}15`, color: color, borderRadius: '12px' }}>
-        <Icon size={24} />
+        <IconComponent size={24} />
       </div>
       <div style={{ textAlign: 'right' }}>
         <h3 style={{ fontSize: '1.75rem', fontWeight: 'bold' }}>{value}</h3>
@@ -17,7 +19,8 @@ const FinanceCard = ({ icon: Icon, label, value, subtext, color }) => (
       <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{subtext}</p>
     </div>
   </div>
-);
+  );
+};
 
 const FinanceDashboard = () => {
   return (

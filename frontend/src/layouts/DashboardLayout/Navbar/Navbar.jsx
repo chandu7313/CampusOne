@@ -3,7 +3,7 @@ import { Search, Bell, Moon, Sun, Menu, ChevronDown, LogOut, User as UserIcon, S
 import { useTheme } from '../../../hooks/useTheme';
 import { useAuthStore } from '../../../store/authStore';
 
-const Navbar = ({ toggleSidebar, isSidebarOpen }) => {
+const Navbar = ({ toggleSidebar }) => {
   const { theme, toggleTheme } = useTheme();
   const { user, logout } = useAuthStore();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -26,9 +26,6 @@ const Navbar = ({ toggleSidebar, isSidebarOpen }) => {
   return (
     <header className="h-navbar flex items-center justify-between px-6 sticky top-0 z-[90] glass">
       <div className="flex items-center gap-5">
-        <button onClick={toggleSidebar} className="text-text-main">
-          <Menu size={20} />
-        </button>
         <div className="hidden min-[600px]:flex items-center bg-bg-main border border-border-custom rounded-lg px-3 py-1.5 gap-2 w-[300px]">
           <Search size={18} className="text-text-muted" />
           <input 

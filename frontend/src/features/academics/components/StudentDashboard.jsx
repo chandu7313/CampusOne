@@ -3,11 +3,13 @@ import PerformanceChart from './PerformanceChart';
 import TimetableWidget from './TimetableWidget';
 import UpcomingExams from './UpcomingExams';
 
-const MetricCard = ({ icon: Icon, label, value, subtext, color, trend }) => (
+const MetricCard = ({ icon, label, value, subtext, color, trend }) => {
+  const IconComponent = icon;
+  return (
   <div className="glass" style={{ padding: '24px', borderRadius: '16px', flex: 1, minWidth: '280px' }}>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '16px' }}>
       <div style={{ padding: '12px', background: `${color}15`, color: color, borderRadius: '12px' }}>
-        <Icon size={24} />
+        <IconComponent size={24} />
       </div>
       {trend && (
         <span style={{ 
@@ -29,7 +31,8 @@ const MetricCard = ({ icon: Icon, label, value, subtext, color, trend }) => (
     <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginTop: '4px' }}>{label}</p>
     <p style={{ color: color, fontSize: '0.75rem', fontWeight: '500', marginTop: '8px' }}>{subtext}</p>
   </div>
-);
+  );
+};
 
 const StudentDashboard = () => {
   return (

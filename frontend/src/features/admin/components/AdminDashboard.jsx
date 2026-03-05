@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, GraduationCap, DollarSign, Activity, UserPlus, FileText, Shield, Archive } from 'lucide-react';
+import { Users, GraduationCap, DollarSign, Activity, UserPlus, FileText, Shield, Archive, Calendar } from 'lucide-react';
 import { useAdminStats } from '../hooks/useAdminStats';
 import StatCard from './StatCard';
 import RevenueChart from './RevenueChart';
@@ -70,10 +70,10 @@ const AdminDashboard = () => {
                                 <UserPlus size={16} /> Add Student
                             </button>
                             <button className="flex items-center justify-center gap-2 p-2.5 rounded-xl border border-border-custom bg-bg-card/50 text-text-main text-[0.85rem] font-medium transition-all duration-200 hover:bg-bg-card hover:border-primary/30 hover:text-primary cursor-pointer">
-                                <FileText size={16} /> Generate Report
+                                <Calendar size={16} /> Schedule Exam
                             </button>
                             <button className="flex items-center justify-center gap-2 p-2.5 rounded-xl border border-border-custom bg-bg-card/50 text-text-main text-[0.85rem] font-medium transition-all duration-200 hover:bg-bg-card hover:border-primary/30 hover:text-primary cursor-pointer">
-                                <Shield size={16} /> Manage Roles
+                                <FileText size={16} /> Post Result
                             </button>
                             <button className="flex items-center justify-center gap-2 p-2.5 rounded-xl border border-border-custom bg-bg-card/50 text-text-main text-[0.85rem] font-medium transition-all duration-200 hover:bg-bg-card hover:border-primary/30 hover:text-primary cursor-pointer">
                                 <Archive size={16} /> Audit Trail

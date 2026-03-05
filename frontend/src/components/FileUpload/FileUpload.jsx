@@ -2,7 +2,6 @@ import { useState, useRef } from 'react';
 import { Upload, X, FileText, Image as ImageIcon, AlertCircle } from 'lucide-react';
 
 const FileUpload = ({ 
-  onUpload, 
   maxSize = 5 * 1024 * 1024, // 5MB
   allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'],
   multiple = true 

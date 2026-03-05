@@ -317,7 +317,7 @@ const UserMutationModal = ({ isOpen, onClose }) => {
                 </footer>
             </div>
 
-            <style jsx>{`
+            <style>{`
                 .modal-input {
                     width: 100%;
                     background: var(--bg-card);

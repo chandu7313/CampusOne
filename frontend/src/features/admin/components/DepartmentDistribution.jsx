@@ -13,7 +13,7 @@ const DepartmentDistribution = ({ data = [] }) => {
                         No departmental data available
                     </div>
                 ) : (
-                    <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+                    <ResponsiveContainer width="100%" height={280}>
                         <PieChart>
                             <Pie
                                 data={data}

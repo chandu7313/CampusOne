@@ -36,3 +36,28 @@ export const useEnrollInCourse = () => {
         }
     });
 };
+export const useStudents = (filters) => {
+    return useQuery({
+        queryKey: ['admin', 'students', filters],
+        queryFn: async () => {
+            const { data } = await apiClient.get('/students', { params: filters });
+            return data.data;
+        }
+    });
+};
+
+export const useBulkImportStudents = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (formData) => {
+            const { data: res } = await apiClient.post('/students/bulk-import', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+            return res.data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries(['admin', 'students']);
+            queryClient.invalidateQueries(['admin', 'stats']);
+        }
+    });
+};

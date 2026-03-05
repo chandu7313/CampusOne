@@ -21,17 +21,25 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       max-md:-translate-x-full
       ${isOpen ? 'max-md:translate-x-0 max-md:shadow-2xl' : ''}
     `}>
-      <div className="h-navbar flex items-center px-6 gap-3 border-b border-border-custom overflow-hidden">
-        <img 
-          src={logo} 
-          alt="CampusOne Logo" 
-          className={`w-auto object-contain transition-[height] duration-300 ${isOpen ? 'h-10' : 'h-8'}`} 
-        />
-        {isOpen && (
-          <span className="font-bold text-[1.1rem] tracking-tight whitespace-nowrap">
-            CAMPUS<span className="text-primary">ONE</span>
-          </span>
-        )}
+      <div className="h-navbar flex items-center justify-between px-5 gap-3 border-b border-border-custom overflow-hidden">
+        <div className="flex items-center gap-3">
+          <img 
+            src={logo} 
+            alt="CampusOne Logo" 
+            className={`w-auto object-contain transition-[height] duration-300 ${isOpen ? 'h-9' : 'h-8'}`} 
+          />
+          {isOpen && (
+            <span className="font-bold text-[1.1rem] tracking-tighter whitespace-nowrap">
+              CAMPUS<span className="text-primary font-black italic">ONE</span>
+            </span>
+          )}
+        </div>
+        <button 
+          onClick={toggleSidebar} 
+          className="p-1.5 rounded-lg text-text-muted hover:bg-primary/5 hover:text-primary transition-all duration-200"
+        >
+          {isOpen ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
+        </button>
       </div>
 
       <nav className="p-5 px-3 flex-1 flex flex-col gap-1 overflow-y-auto scroller">
@@ -53,14 +61,12 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         })}
       </nav>
 
-      <div className="p-5 px-3 border-t border-border-custom">
-        <button 
-          onClick={toggleSidebar} 
-          className="flex items-center p-3 rounded-lg text-text-muted transition-all duration-200 gap-3 hover:bg-primary/5 hover:text-primary w-full"
-        >
-          {isOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
-          {isOpen && <span className="text-sm font-medium whitespace-nowrap">Collapse Sidebar</span>}
-        </button>
+      <div className="p-5 px-3 border-t border-border-custom opacity-40">
+        <div className="flex items-center justify-center py-2">
+            <span className="text-[0.6rem] font-black uppercase tracking-widest text-text-muted whitespace-nowrap">
+                {isOpen ? '© 2026 CampusOne v1.0.4' : 'v1.0'}
+            </span>
+        </div>
       </div>
     </aside>
   );

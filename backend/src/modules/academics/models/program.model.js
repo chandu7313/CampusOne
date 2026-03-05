@@ -24,6 +24,11 @@ const Program = sequelize.define('Program', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
+    totalSemesters: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 8 // Default for 4-year programs
+    },
     isActive: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,

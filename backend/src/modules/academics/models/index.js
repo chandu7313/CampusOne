@@ -1,9 +1,27 @@
 import Department from './department.model.js';
 import Program from './program.model.js';
 import Course from './course.model.js';
+import Semester from './semester.model.js';
+import Section from './section.model.js';
+import StudentSection from './studentSection.model.js';
+import SemesterSubject from './semesterSubject.model.js';
+import Classroom from './classroom.model.js';
+import TimeSlot from './timeSlot.model.js';
+import TimetableEntry from './timetableEntry.model.js';
+import FacultySubject from './facultySubject.model.js';
+import FacultyAssignment from './facultyAssignment.model.js';
 
 export {
     Department,
     Program,
-    Course
+    Course,
+    Semester,
+    Section,
+    StudentSection,
+    SemesterSubject,
+    Classroom,
+    TimeSlot,
+    TimetableEntry,
+    FacultySubject,
+    FacultyAssignment
 };

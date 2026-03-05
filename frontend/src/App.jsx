@@ -1,6 +1,5 @@
 import { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import DashboardLayout from './layouts/DashboardLayout/DashboardLayout';
 import ProtectedRoute from './features/auth/components/ProtectedRoute';
 import LoginForm from './features/auth/components/LoginForm';
@@ -10,10 +9,15 @@ import { CardSkeleton } from './components/common/Skeleton';
 import { useAuthStore } from './store/authStore';
 
 // Lazy loaded components
-const StudentDashboard = lazy(() => import('./features/academics/components/StudentDashboard'));
+const StudentDashboard = lazy(() => import('./features/student/Dashboard'));
+const StudentDashboardLayout = lazy(() => import('./features/student/layouts/StudentDashboardLayout'));
 const AdminDashboard = lazy(() => import('./features/admin/components/AdminDashboard'));
 const UserManagement = lazy(() => import('./features/admin/components/UserManagement'));
 const AcademicExplorer = lazy(() => import('./features/admin/components/AcademicExplorer'));
+const TimetableManager = lazy(() => import('./features/admin/components/TimetableManager'));
+const FacultyWorkload = lazy(() => import('./features/admin/components/FacultyWorkload'));
+const StudentConsole = lazy(() => import('./features/admin/components/StudentConsole'));
+const ExamConsole = lazy(() => import('./features/admin/components/ExamConsole'));
 const FinancePanel = lazy(() => import('./features/admin/components/FinancePanel'));
 const SystemSettings = lazy(() => import('./features/admin/components/SystemSettings'));
 const FileGovernance = lazy(() => import('./features/admin/components/FileGovernance'));
@@ -42,48 +46,55 @@ function App() {
           <Route path="/login" element={<LoginForm />} />
           <Route path="/unauthorized" element={<div className="glass" style={{ padding: '24px', margin: '20px' }}>403 - Unauthorized Access</div>} />
           
-          {/* Protected Dashboard Routes */}
+          {/* Base Protected Wrap */}
           <Route element={<ProtectedRoute />}>
-            <Route element={<DashboardLayout />}>
               <Route path="/" element={<RoleDashboardRedirect />} />
               <Route path="/dashboard" element={<RoleDashboardRedirect />} />
               
-              {/* Admin Routes */}
-              <Route element={<ProtectedRoute allowedRoles={['Admin']} />}>
-                <Route path="/admin/dashboard" element={<Suspense fallback={<CardSkeleton />}><AdminDashboard /></Suspense>} />
-                <Route path="/admin/users" element={<Suspense fallback={<CardSkeleton />}><UserManagement /></Suspense>} />
-                <Route path="/admin/academic" element={<Suspense fallback={<CardSkeleton />}><AcademicExplorer /></Suspense>} />
-                <Route path="/admin/finance" element={<Suspense fallback={<CardSkeleton />}><FinancePanel /></Suspense>} />
-                <Route path="/admin/config" element={<Suspense fallback={<CardSkeleton />}><SystemSettings /></Suspense>} />
-                <Route path="/admin/files" element={<Suspense fallback={<CardSkeleton />}><FileGovernance /></Suspense>} />
-                <Route path="/admin/*" element={<Suspense fallback={<CardSkeleton />}><AdminDashboard /></Suspense>} />
+              {/* Admin/Generic Layout Routes */}
+              <Route element={<DashboardLayout />}>
+                {/* Admin Routes */}
+                <Route element={<ProtectedRoute allowedRoles={['Admin']} />}>
+                  <Route path="/admin/dashboard" element={<Suspense fallback={<CardSkeleton />}><AdminDashboard /></Suspense>} />
+                  <Route path="/admin/users" element={<Suspense fallback={<CardSkeleton />}><UserManagement /></Suspense>} />
+                  <Route path="/admin/academic" element={<Suspense fallback={<CardSkeleton />}><AcademicExplorer /></Suspense>} />
+                  <Route path="/admin/timetable" element={<Suspense fallback={<CardSkeleton />}><TimetableManager /></Suspense>} />
+                  <Route path="/admin/faculty" element={<Suspense fallback={<CardSkeleton />}><FacultyWorkload /></Suspense>} />
+                  <Route path="/admin/students" element={<Suspense fallback={<CardSkeleton />}><StudentConsole /></Suspense>} />
+                  <Route path="/admin/exams" element={<Suspense fallback={<CardSkeleton />}><ExamConsole /></Suspense>} />
+                  <Route path="/admin/finance" element={<Suspense fallback={<CardSkeleton />}><FinancePanel /></Suspense>} />
+                  <Route path="/admin/config" element={<Suspense fallback={<CardSkeleton />}><SystemSettings /></Suspense>} />
+                  <Route path="/admin/files" element={<Suspense fallback={<CardSkeleton />}><FileGovernance /></Suspense>} />
+                  <Route path="/admin/*" element={<Suspense fallback={<CardSkeleton />}><AdminDashboard /></Suspense>} />
+                </Route>
+
+                {/* Finance Routes */}
+                <Route element={<ProtectedRoute allowedRoles={['Finance']} />}>
+                  <Route path="/finance/dashboard" element={<Suspense fallback={<CardSkeleton />}><FinanceDashboard /></Suspense>} />
+                  <Route path="/finance/*" element={<Suspense fallback={<CardSkeleton />}><FinanceDashboard /></Suspense>} />
+                </Route>
+
+                {/* HOD Routes */}
+                <Route element={<ProtectedRoute allowedRoles={['HOD']} />}>
+                  <Route path="/hod/dashboard" element={<div className="glass" style={{ padding: '24px' }}>HOD Dashboard Coming Soon</div>} />
+                </Route>
+
+                {/* Faculty Routes */}
+                <Route element={<ProtectedRoute allowedRoles={['Faculty']} />}>
+                    <Route path="/faculty/dashboard" element={<Suspense fallback={<CardSkeleton />}><StudentDashboard /></Suspense>} />
+                    <Route path="/faculty/*" element={<div className="glass" style={{ padding: '24px' }}>Faculty Module Coming Soon</div>} />
+                </Route>
+
+                <Route path="/settings" element={<div className="glass" style={{ padding: '24px' }}>Settings Module Coming Soon</div>} />
               </Route>
 
-              {/* Faculty Routes */}
-              <Route element={<ProtectedRoute allowedRoles={['Faculty', 'HOD']} />}>
-                <Route path="/faculty/dashboard" element={<Suspense fallback={<CardSkeleton />}><StudentDashboard /></Suspense>} />
-                <Route path="/faculty/*" element={<div className="glass" style={{ padding: '24px' }}>Faculty Module Coming Soon</div>} />
-              </Route>
-
-              {/* Student Routes */}
+              {/* Student Specific Layout & Routes */}
               <Route element={<ProtectedRoute allowedRoles={['Student']} />}>
-                <Route path="/student/dashboard" element={<Suspense fallback={<CardSkeleton />}><StudentDashboard /></Suspense>} />
-                <Route path="/student/*" element={<div className="glass" style={{ padding: '24px' }}>Student Module Coming Soon</div>} />
+                <Route element={<Suspense fallback={<CardSkeleton />}><StudentDashboardLayout /></Suspense>}>
+                  <Route path="/student/dashboard" element={<StudentDashboard />} />
+                  <Route path="/student/*" element={<StudentDashboard />} />
+                </Route>
               </Route>
-
-              {/* Finance Routes */}
-              <Route element={<ProtectedRoute allowedRoles={['Finance', 'Admin']} />}>
-                <Route path="/finance/dashboard" element={<Suspense fallback={<CardSkeleton />}><FinanceDashboard /></Suspense>} />
-                <Route path="/finance/*" element={<Suspense fallback={<CardSkeleton />}><FinanceDashboard /></Suspense>} />
-              </Route>
-
-              {/* HOD Routes */}
-              <Route element={<ProtectedRoute allowedRoles={['HOD']} />}>
-                <Route path="/hod/dashboard" element={<div className="glass" style={{ padding: '24px' }}>HOD Dashboard Coming Soon</div>} />
-              </Route>
-
-              <Route path="/settings" element={<div className="glass" style={{ padding: '24px' }}>Settings Module Coming Soon</div>} />
-            </Route>
           </Route>
 
           {/* Fallback */}
