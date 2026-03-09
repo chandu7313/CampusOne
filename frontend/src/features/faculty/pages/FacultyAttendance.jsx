@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Calendar, Users, Save, CheckCircle, XCircle } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import apiClient from '../../api/apiClient';
+import apiClient from '../../../api/apiClient';
 
 const FacultyAttendance = () => {
     const queryClient = useQueryClient();
