@@ -11,6 +11,23 @@ import { useAuthStore } from './store/authStore';
 // Lazy loaded components
 const StudentDashboard = lazy(() => import('./features/student/Dashboard'));
 const StudentDashboardLayout = lazy(() => import('./features/student/layouts/StudentDashboardLayout'));
+const StudentCourses = lazy(() => import('./features/student/pages/StudentCourses'));
+const StudentTimetable = lazy(() => import('./features/student/pages/StudentTimetable'));
+const StudentAttendance = lazy(() => import('./features/student/pages/StudentAttendance'));
+const FacultyAttendance = lazy(() => import('./features/faculty/pages/FacultyAttendance'));
+const StudentAssignments = lazy(() => import('./features/student/pages/StudentAssignments'));
+const FacultyAssignments = lazy(() => import('./features/faculty/pages/FacultyAssignments'));
+const StudentExams = lazy(() => import('./features/student/pages/StudentExams'));
+const FacultyExams = lazy(() => import('./features/faculty/pages/FacultyExams'));
+const StudentFees = lazy(() => import('./features/student/pages/StudentFees'));
+const MessageCenter = lazy(() => import('./components/communication/MessageCenter'));
+const Announcements = lazy(() => import('./components/communication/Announcements'));
+const Events = lazy(() => import('./components/communication/Events'));
+const StudentPlacements = lazy(() => import('./features/student/pages/PlacementPortal'));
+const FacultyPlacements = lazy(() => import('./features/faculty/pages/FacultyPlacements'));
+const Authorities = lazy(() => import('./features/student/pages/Authorities'));
+const ProfilePage = lazy(() => import('./features/common/pages/ProfilePage'));
+const ComingSoon = lazy(() => import('./components/common/ComingSoon'));
 const AdminDashboard = lazy(() => import('./features/admin/components/AdminDashboard'));
 const UserManagement = lazy(() => import('./features/admin/components/UserManagement'));
 const AcademicExplorer = lazy(() => import('./features/admin/components/AcademicExplorer'));
@@ -82,6 +99,17 @@ function App() {
                 {/* Faculty Routes */}
                 <Route element={<ProtectedRoute allowedRoles={['Faculty']} />}>
                     <Route path="/faculty/dashboard" element={<Suspense fallback={<CardSkeleton />}><StudentDashboard /></Suspense>} />
+                    <Route path="/faculty/courses" element={<ComingSoon featureName="Faculty Courses" />} />
+                    <Route path="/faculty/timetable" element={<StudentTimetable />} />
+                    <Route path="/faculty/attendance" element={<FacultyAttendance />} />
+                    <Route path="/faculty/assignments" element={<FacultyAssignments />} />
+                    <Route path="/faculty/exams" element={<FacultyExams />} />
+                    <Route path="/faculty/announcements" element={<Announcements />} />
+                    <Route path="/faculty/events" element={<Events />} />
+                    <Route path="/faculty/messages" element={<MessageCenter />} />
+                    <Route path="/faculty/placements" element={<FacultyPlacements />} />
+                    <Route path="/faculty/authorities" element={<Authorities />} />
+                    <Route path="/faculty/profile" element={<ProfilePage />} />
                     <Route path="/faculty/*" element={<div className="glass" style={{ padding: '24px' }}>Faculty Module Coming Soon</div>} />
                 </Route>
 
@@ -92,6 +120,18 @@ function App() {
               <Route element={<ProtectedRoute allowedRoles={['Student']} />}>
                 <Route element={<Suspense fallback={<CardSkeleton />}><StudentDashboardLayout /></Suspense>}>
                   <Route path="/student/dashboard" element={<StudentDashboard />} />
+                  <Route path="/student/courses" element={<StudentCourses />} />
+                  <Route path="/student/timetable" element={<StudentTimetable />} />
+                  <Route path="/student/attendance" element={<StudentAttendance />} />
+                  <Route path="/student/assignments" element={<StudentAssignments />} />
+                  <Route path="/student/exams" element={<StudentExams />} />
+                  <Route path="/student/fees" element={<StudentFees />} />
+                  <Route path="/student/announcements" element={<Announcements />} />
+                  <Route path="/student/events" element={<Events />} />
+                  <Route path="/student/messages" element={<MessageCenter />} />
+                  <Route path="/student/placements" element={<StudentPlacements />} />
+                  <Route path="/student/authorities" element={<Authorities />} />
+                  <Route path="/student/profile" element={<ProfilePage />} />
                   <Route path="/student/*" element={<StudentDashboard />} />
                 </Route>
               </Route>

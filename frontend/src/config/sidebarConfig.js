@@ -10,7 +10,11 @@ import {
     ShieldCheck,
     FileText,
     Calendar,
-    ClipboardList
+    ClipboardList,
+    Bell,
+    MessageSquare,
+    Trophy,
+    Briefcase
 } from 'lucide-react';
 
 export const roleMenus = {
@@ -33,17 +37,30 @@ export const roleMenus = {
         { icon: Calendar, label: 'Academic Planner', path: '/hod/planner' },
     ],
     Faculty: [
-        { icon: LayoutDashboard, label: 'Faculty Dashboard', path: '/faculty/dashboard' },
+        { icon: LayoutDashboard, label: 'Dashboard', path: '/faculty/dashboard' },
         { icon: BookOpen, label: 'My Courses', path: '/faculty/courses' },
+        { icon: Calendar, label: 'Timetable', path: '/faculty/timetable' },
         { icon: ClipboardCheck, label: 'Attendance', path: '/faculty/attendance' },
         { icon: TrendingUp, label: 'Assignments', path: '/faculty/assignments' },
+        { icon: GraduationCap, label: 'Exams', path: '/faculty/exams' },
+        { icon: Bell, label: 'Announcements', path: '/faculty/announcements' },
+        { icon: MessageSquare, label: 'Messages', path: '/faculty/messages' },
+        { icon: Users, label: 'Profile', path: '/faculty/profile' },
     ],
     Student: [
-        { icon: LayoutDashboard, label: 'Student Dashboard', path: '/student/dashboard' },
-        { icon: BookOpen, label: 'Course Catalog', path: '/student/courses' },
+        { icon: LayoutDashboard, label: 'Dashboard', path: '/student/dashboard' },
+        { icon: BookOpen, label: 'My Courses', path: '/student/courses' },
         { icon: Calendar, label: 'Timetable', path: '/student/timetable' },
-        { icon: ClipboardList, label: 'My Grades', path: '/student/grades' },
-        { icon: Wallet, label: 'Fee Status', path: '/student/fees' },
+        { icon: ClipboardCheck, label: 'Attendance', path: '/student/attendance' },
+        { icon: TrendingUp, label: 'Assignments', path: '/student/assignments' },
+        { icon: GraduationCap, label: 'Exams', path: '/student/exams' },
+        { icon: Wallet, label: 'Fees', path: '/student/fees' },
+        { icon: Bell, label: 'Announcements', path: '/student/announcements' },
+        { icon: Trophy, label: 'Events', path: '/student/events' },
+        { icon: Briefcase, label: 'Placements', path: '/student/placements' },
+        { icon: MessageSquare, label: 'Messages', path: '/student/messages' },
+        { icon: ShieldCheck, label: 'Authorities', path: '/student/authorities' },
+        { icon: Users, label: 'Profile', path: '/student/profile' },
     ],
     Finance: [
         { icon: LayoutDashboard, label: 'Finance Dashboard', path: '/finance/dashboard' },

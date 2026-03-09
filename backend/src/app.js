@@ -15,14 +15,15 @@ import assignmentRoutes from './modules/assignments/routes.js';
 import communicationRoutes from './modules/communication/routes.js';
 import placementRoutes from './modules/placements/routes.js';
 import dashboardRoutes from './modules/dashboard/routes.js';
+import userRoutes from './modules/users/routes.js';
 import * as models from './models/index.js';
 import { sequelize } from './config/database.js';
 
 const app = express();
 
-// Sync Database (alter: true ensures schema matches models in dev)
-sequelize.sync({ alter: true }).then(() => {
-    logger.info('Database synced with schema changes');
+// Sync Database (safe sync in development)
+sequelize.sync().then(() => {
+    logger.info('Database synced');
 }).catch(err => {
     logger.error('Error syncing database:', err);
 });
@@ -50,6 +51,7 @@ app.use('/api/v1/assignments', assignmentRoutes);
 app.use('/api/v1/communication', communicationRoutes);
 app.use('/api/v1/placements', placementRoutes);
 app.use('/api/v1/dashboard', dashboardRoutes);
+app.use('/api/v1/users', userRoutes);
 
 // Health check
 app.get('/', (req, res) => {

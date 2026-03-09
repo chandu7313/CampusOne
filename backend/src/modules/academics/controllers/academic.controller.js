@@ -1,6 +1,7 @@
 import {
     Department, Program, Course,
-    Semester, Section, StudentSection, SemesterSubject
+    Semester, Section, StudentSection, SemesterSubject,
+    StudentProfile, Enrollment
 } from '../../../models/index.js';
 import catchAsync from '../../../utils/catchAsync.js';
 import AppError from '../../../utils/appError.js';

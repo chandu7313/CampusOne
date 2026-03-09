@@ -104,7 +104,7 @@ const StudentDashboard = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {/* Simulated handcrafted variation by showing a few realistic cards */}
                     {courses?.length > 0 ? (
-                        courses.slice(0, 4).map((course, i) => (
+                        courses.map((course, i) => (
                             <CourseCard key={course.id} course={{
                                 ...course,
                                 attendance: 75 + i * 5,

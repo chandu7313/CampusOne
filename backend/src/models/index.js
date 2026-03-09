@@ -7,7 +7,7 @@ import {
     Department, Program, Course,
     Semester, Section, StudentSection, SemesterSubject,
     Classroom, TimeSlot, TimetableEntry,
-    FacultySubject, FacultyAssignment
+    FacultySubject, FacultyAssignment, Attendance
 } from '../modules/academics/models/index.js';
 import { StudentProfile, Enrollment, AdmissionLog } from '../modules/students/models/index.js';
 import { FeeStructure, StudentFee, Scholarship } from '../modules/finance/models/index.js';
@@ -15,11 +15,11 @@ import {
     Exam, SubjectExam, ExamHallAssignment, ExamResult
 } from '../modules/exams/models/index.js';
 import {
-    Holiday, Event, Announcement
+    Holiday, Event, Announcement, EventRegistration
 } from '../modules/admin/models/index.js';
 import { Assignment, AssignmentSubmission } from '../modules/assignments/models/index.js';
 import { Message } from '../modules/communication/models/index.js';
-import { PlacementRecord } from '../modules/placements/models/index.js';
+import { PlacementRecord, PlacementOpportunity, PlacementApplication } from '../modules/placements/models/index.js';
 
 /**
  * This index file serves as the single point of truth for all models.
@@ -118,6 +118,16 @@ Enrollment.belongsTo(StudentProfile, { foreignKey: 'studentProfileId', as: 'stud
 Course.hasMany(Enrollment, { foreignKey: 'courseId', as: 'enrollments' });
 Enrollment.belongsTo(Course, { foreignKey: 'courseId', as: 'course' });
 
+// Attendance
+User.hasMany(Attendance, { foreignKey: 'studentId', as: 'attendances' });
+Attendance.belongsTo(User, { foreignKey: 'studentId', as: 'student' });
+
+Course.hasMany(Attendance, { foreignKey: 'subjectId', as: 'subjectAttendances' });
+Attendance.belongsTo(Course, { foreignKey: 'subjectId', as: 'subject' });
+
+User.hasMany(Attendance, { foreignKey: 'facultyId', as: 'markedAttendances' });
+Attendance.belongsTo(User, { foreignKey: 'facultyId', as: 'faculty' });
+
 // Finance Associations
 Program.hasMany(FeeStructure, { foreignKey: 'programId', as: 'feeStructures' });
 FeeStructure.belongsTo(Program, { foreignKey: 'programId', as: 'program' });
@@ -134,6 +144,13 @@ Scholarship.belongsTo(StudentProfile, { foreignKey: 'studentProfileId', as: 'stu
 // Announcements
 User.hasMany(Announcement, { foreignKey: 'authorId', as: 'announcements' });
 Announcement.belongsTo(User, { foreignKey: 'authorId', as: 'author' });
+
+// Events & Registrations
+Event.hasMany(EventRegistration, { foreignKey: 'eventId', as: 'registrations' });
+EventRegistration.belongsTo(Event, { foreignKey: 'eventId', as: 'event' });
+
+User.hasMany(EventRegistration, { foreignKey: 'userId', as: 'eventRegistrations' });
+EventRegistration.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
 // Assignments
 Course.hasMany(Assignment, { foreignKey: 'subjectId', as: 'assignments' });
@@ -154,6 +171,12 @@ Message.belongsTo(User, { foreignKey: 'receiverId', as: 'receiver' });
 // Placements
 User.hasMany(PlacementRecord, { foreignKey: 'studentId', as: 'placementRecords' });
 PlacementRecord.belongsTo(User, { foreignKey: 'studentId', as: 'student' });
+
+PlacementOpportunity.hasMany(PlacementApplication, { foreignKey: 'opportunityId', as: 'applications' });
+PlacementApplication.belongsTo(PlacementOpportunity, { foreignKey: 'opportunityId', as: 'opportunity' });
+
+User.hasMany(PlacementApplication, { foreignKey: 'studentId', as: 'placementApplications' });
+PlacementApplication.belongsTo(User, { foreignKey: 'studentId', as: 'student' });
 
 export {
     User,
@@ -190,5 +213,9 @@ export {
     Assignment,
     AssignmentSubmission,
     Message,
-    PlacementRecord
+    PlacementRecord,
+    PlacementOpportunity,
+    PlacementApplication,
+    EventRegistration,
+    Attendance
 };

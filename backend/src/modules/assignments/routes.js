@@ -7,7 +7,14 @@ const router = express.Router();
 
 router.use(protect);
 
+// Student Routes
 router.get('/student', authorize('Student'), assignmentController.getStudentAssignments);
 router.post('/submit', authorize('Student'), assignmentController.submitAssignment);
+
+// Faculty Routes
+router.get('/faculty', authorize('Faculty', 'Admin'), assignmentController.getFacultyAssignments);
+router.post('/', authorize('Faculty', 'Admin'), assignmentController.createAssignment);
+router.get('/:id/submissions', authorize('Faculty', 'Admin'), assignmentController.getAssignmentSubmissions);
+router.post('/submissions/:id/grade', authorize('Faculty', 'Admin'), assignmentController.gradeSubmission);
 
 export default router;

@@ -35,7 +35,7 @@ export const useStudentMessages = () => {
     return useQuery({
         queryKey: ['student', 'messages'],
         queryFn: async () => {
-            const { data } = await apiClient.get('/communication');
+            const { data } = await apiClient.get('/communication/messages');
             return data.data;
         }
     });
@@ -45,7 +45,7 @@ export const useRecentPlacements = () => {
     return useQuery({
         queryKey: ['student', 'placements'],
         queryFn: async () => {
-            const { data } = await apiClient.get('/placements');
+            const { data } = await apiClient.get('/placements/recent');
             return data.data;
         }
     });

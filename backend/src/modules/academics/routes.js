@@ -2,6 +2,8 @@ import express from 'express';
 import * as academicController from './controllers/academic.controller.js';
 import * as timetableController from './controllers/timetable.controller.js';
 import * as facultyController from './controllers/faculty.controller.js';
+import * as attendanceController from './controllers/attendance.controller.js';
+import * as authoritiesController from './controllers/authorities.controller.js';
 import { protect } from '../../core/middlewares/auth.middleware.js';
 import { authorize } from '../../core/middlewares/security.middleware.js';
 
@@ -9,14 +11,19 @@ const router = express.Router();
 
 // All academic management requires Authentication and Admin role
 router.use(protect);
-router.use(authorize('Admin'));
+// Routes accessible by authenticated users (Students/Faculty/Admin)
+router.get('/courses/student', academicController.getStudentCourses);
+router.get('/timetable/me', timetableController.getMyTimetable);
+router.get('/attendance/me', attendanceController.getMyAttendance);
+router.post('/attendance/mark', authorize('Faculty', 'Admin'), attendanceController.markAttendance);
+router.get('/attendance/class', authorize('Faculty', 'Admin'), attendanceController.getClassAttendance);
 
-// Academic Hierarchy
+// All other academic management requires Admin role
+router.use(authorize('Admin'));
 router.get('/hierarchy', academicController.getAcademicHierarchy);
 router.post('/departments', academicController.createDepartment);
 router.post('/programs', academicController.createProgram);
 router.get('/courses', academicController.getCourses);
-router.get('/courses/student', academicController.getStudentCourses);
 router.post('/courses', academicController.createCourse);
 
 // Academic Structure

@@ -101,3 +101,64 @@ export const getTimeSlots = catchAsync(async (req, res, next) => {
     const slots = await TimeSlot.findAll({ order: [['dayOfWeek', 'ASC'], ['startTime', 'ASC']] });
     res.status(200).json({ status: 'success', data: slots });
 });
+
+/**
+ * Get personalized timetable for currently logged-in user (Student/Faculty)
+ */
+export const getMyTimetable = catchAsync(async (req, res, next) => {
+    const { role, id: userId } = req.user;
+    let entries = [];
+
+    if (role === 'Faculty') {
+        entries = await TimetableEntry.findAll({
+            where: { facultyId: userId },
+            include: [
+                { model: TimeSlot, as: 'timeSlot' },
+                { model: Course, as: 'subject' },
+                { model: Classroom, as: 'classroom' },
+                { model: Section, as: 'section' }
+            ],
+            order: [
+                [{ model: TimeSlot, as: 'timeSlot' }, 'dayOfWeek', 'ASC'],
+                [{ model: TimeSlot, as: 'timeSlot' }, 'startTime', 'ASC']
+            ]
+        });
+    } else if (role === 'Student') {
+        const { StudentProfile } = await import('../../../models/index.js');
+        const studentProfile = await StudentProfile.findOne({
+            where: { userId },
+            include: [{ model: Section, as: 'sections', attributes: ['id'] }]
+        });
+
+        if (!studentProfile) {
+            return next(new AppError('Student profile not found', 404));
+        }
+
+        const sectionIds = studentProfile.sections.map(s => s.id);
+
+        if (sectionIds.length > 0) {
+            entries = await TimetableEntry.findAll({
+                where: { sectionId: { [Op.in]: sectionIds } },
+                include: [
+                    { model: TimeSlot, as: 'timeSlot' },
+                    { model: Course, as: 'subject' },
+                    { model: User, as: 'faculty', attributes: ['firstName', 'lastName'] },
+                    { model: Classroom, as: 'classroom' }
+                ],
+                order: [
+                    [{ model: TimeSlot, as: 'timeSlot' }, 'dayOfWeek', 'ASC'],
+                    [{ model: TimeSlot, as: 'timeSlot' }, 'startTime', 'ASC']
+                ]
+            });
+        }
+    } else {
+        return next(new AppError(`Timetable not available for role: ${role}`, 403));
+    }
+
+    res.status(200).json({
+        status: 'success',
+        results: entries.length,
+        data: entries
+    });
+});
+

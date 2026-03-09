@@ -10,6 +10,7 @@ import TimeSlot from './timeSlot.model.js';
 import TimetableEntry from './timetableEntry.model.js';
 import FacultySubject from './facultySubject.model.js';
 import FacultyAssignment from './facultyAssignment.model.js';
+import Attendance from './attendance.model.js';
 
 export {
     Department,
@@ -23,5 +24,6 @@ export {
     TimeSlot,
     TimetableEntry,
     FacultySubject,
-    FacultyAssignment
+    FacultyAssignment,
+    Attendance
 };

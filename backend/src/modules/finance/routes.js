@@ -5,10 +5,12 @@ import { authorize } from '../../core/middlewares/security.middleware.js';
 
 const router = express.Router();
 
-// All finance management requires Authentication and Admin (or Finance) role
-router.use(protect);
-router.use(authorize('Admin', 'Finance'));
+// Student Routes
+router.get('/student/me', authorize('Student'), financeController.getStudentFees);
+router.post('/student/pay', authorize('Student'), financeController.processFeePayment);
 
+// Admin / Finance Routes
+router.use(authorize('Admin', 'Finance'));
 router.get('/overview', financeController.getFinanceOverview);
 router.post('/fee-structures', financeController.createFeeStructure);
 router.patch('/scholarships/:scholarshipId/approve', financeController.approveScholarship);

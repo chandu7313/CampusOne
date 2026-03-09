@@ -6,7 +6,7 @@ const CourseCard = ({ course }) => {
     // const rotation = Math.random() * 1 - 0.5;
 
     return (
-        <div className="group relative bg-bg-card hover:bg-black/5 dark:hover:bg-[#1A1B1E] border border-border-custom rounded-[28px] p-5 transition-all duration-300 hover:scale-[1.01] hover:shadow-xl hover:shadow-primary/5 cursor-pointer flex flex-col justify-between">
+        <div className="group relative bg-bg-card order border-border-custom rounded-[28px] p-5 transition-all duration-300 hover:scale-[1.01] hover:shadow-xl hover:shadow-primary/5 cursor-pointer flex flex-col justify-between">
             <div>
                 <div className="flex justify-between items-start mb-4">
                     <div className="w-11 h-11 bg-black/5 dark:bg-white/5 rounded-xl flex items-center justify-center text-primary font-black text-lg group-hover:bg-primary group-hover:text-white transition-all duration-500 border border-border-custom/50">

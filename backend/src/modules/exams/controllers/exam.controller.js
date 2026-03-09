@@ -110,3 +110,85 @@ export const getExamSchedule = catchAsync(async (req, res, next) => {
 
     res.status(200).json({ status: 'success', data: schedule });
 });
+
+/**
+ * STUDENT: Get Upcoming and Ongoing Exams
+ */
+export const getStudentExams = catchAsync(async (req, res, next) => {
+    const studentProfileId = req.user.studentProfile?.id;
+    if (!studentProfileId) return next(new AppError('Student profile not found', 404));
+
+    // Get active exams
+    const exams = await Exam.findAll({
+        where: { status: { [Op.in]: ['PUBLISHED', 'COMPLETED', 'RESULTS_PUBLISHED'] } },
+        include: [{
+            model: SubjectExam,
+            as: 'papers',
+            include: [
+                { model: Course, as: 'subject', attributes: ['name', 'code'] },
+                {
+                    model: ExamHallAssignment,
+                    as: 'hallAssignments',
+                    include: [{ model: Classroom, as: 'hall', attributes: ['name'] }]
+                }
+            ]
+        }],
+        order: [['startDate', 'DESC']]
+    });
+
+    res.status(200).json({ status: 'success', results: exams.length, data: exams });
+});
+
+/**
+ * STUDENT: Get Exam Results
+ */
+export const getStudentResults = catchAsync(async (req, res, next) => {
+    const studentId = req.user.id;
+
+    const results = await ExamResult.findAll({
+        where: { studentId },
+        include: [{
+            model: SubjectExam,
+            as: 'paper',
+            include: [
+                { model: Course, as: 'subject', attributes: ['name', 'code', 'credits'] },
+                { model: Exam, as: 'exam', attributes: ['name', 'type', 'academicYear', 'status'] }
+            ]
+        }],
+        order: [[{ model: SubjectExam, as: 'paper' }, { model: Exam, as: 'exam' }, 'academicYear', 'DESC']]
+    });
+
+    res.status(200).json({ status: 'success', results: results.length, data: results });
+});
+
+/**
+ * FACULTY: Get Exams (Overview for grading)
+ */
+export const getFacultyExams = catchAsync(async (req, res, next) => {
+    // Return all exams for now; in a real scenario, filter exams where faculty is invigilating or teaching the subject
+    const exams = await Exam.findAll({
+        where: { status: { [Op.in]: ['PUBLISHED', 'COMPLETED', 'RESULTS_PUBLISHED'] } },
+        order: [['startDate', 'DESC']]
+    });
+
+    res.status(200).json({ status: 'success', results: exams.length, data: exams });
+});
+
+/**
+ * FACULTY: Get Results for a specific paper to view or update
+ */
+export const getFacultyExamResults = catchAsync(async (req, res, next) => {
+    const { subjectExamId } = req.params;
+
+    const results = await ExamResult.findAll({
+        where: { subjectExamId },
+        include: [{
+            model: User,
+            as: 'student',
+            attributes: ['firstName', 'lastName', 'email']
+        }]
+    });
+
+    res.status(200).json({ status: 'success', results: results.length, data: results });
+});
+
