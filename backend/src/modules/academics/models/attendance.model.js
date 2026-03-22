@@ -19,6 +19,10 @@ const Attendance = sequelize.define('Attendance', {
         type: DataTypes.UUID,
         allowNull: false,
     },
+    sectionId: { // Section ID for which attendance is marked
+        type: DataTypes.UUID,
+        allowNull: false,
+    },
     date: {
         type: DataTypes.DATEONLY,
         allowNull: false,

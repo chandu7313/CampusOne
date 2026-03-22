@@ -8,6 +8,7 @@ import logger from './utils/logger.js';
 import authRoutes from './modules/auth/routes/auth.routes.js';
 import adminRoutes from './modules/admin/routes.js';
 import academicRoutes from './modules/academics/routes.js';
+import timetableRoutes from './modules/academics/timetable.routes.js';
 import studentRoutes from './modules/students/routes.js';
 import examRoutes from './modules/exams/routes.js';
 import financeRoutes from './modules/finance/routes.js';
@@ -21,12 +22,13 @@ import { sequelize } from './config/database.js';
 
 const app = express();
 
-// Sync Database (safe sync in development)
-sequelize.sync().then(() => {
+// Sync Database — alter: true adds new columns to existing tables without dropping data
+sequelize.sync({ alter: true }).then(() => {
     logger.info('Database synced');
 }).catch(err => {
     logger.error('Error syncing database:', err);
 });
+
 
 // Security HTTP headers
 app.use(helmet());
@@ -44,6 +46,7 @@ app.use(express.json({ limit: '10kb' }));
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/academic', academicRoutes);
+app.use('/api/v1/timetables', timetableRoutes);
 app.use('/api/v1/students', studentRoutes);
 app.use('/api/v1/exams', examRoutes);
 app.use('/api/v1/finance-admin', financeRoutes); // Using finance-admin to distinguish from student finance

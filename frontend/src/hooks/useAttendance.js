@@ -11,16 +11,40 @@ export const useMyAttendance = () => {
     });
 };
 
-export const useClassAttendance = (subjectId, date) => {
+export const useClassAttendance = (subjectId, sectionId, date) => {
     return useQuery({
-        queryKey: ['class-attendance', subjectId, date],
+        queryKey: ['class-attendance', subjectId, sectionId, date],
         queryFn: async () => {
-            if (!subjectId || !date) return [];
+            if (!subjectId || !sectionId || !date) return [];
             const { data } = await apiClient.get('/academic/attendance/class', {
-                params: { subjectId, date }
+                params: { subjectId, sectionId, date }
             });
             return data.data; // Array of specific day records
         },
-        enabled: !!subjectId && !!date
+        enabled: !!subjectId && !!sectionId && !!date
+    });
+};
+
+export const useSections = (semesterId) => {
+    return useQuery({
+        queryKey: ['sections', semesterId],
+        queryFn: async () => {
+            const { data } = await apiClient.get('/academic/sections', {
+                params: { semesterId }
+            });
+            return data.data;
+        }
+    });
+};
+
+export const useSectionStudents = (sectionId) => {
+    return useQuery({
+        queryKey: ['section-students', sectionId],
+        queryFn: async () => {
+            if (!sectionId) return [];
+            const { data } = await apiClient.get(`/academic/sections/${sectionId}/students`);
+            return data.data;
+        },
+        enabled: !!sectionId
     });
 };

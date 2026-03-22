@@ -32,6 +32,8 @@ const AdminDashboard = lazy(() => import('./features/admin/components/AdminDashb
 const UserManagement = lazy(() => import('./features/admin/components/UserManagement'));
 const AcademicExplorer = lazy(() => import('./features/admin/components/AcademicExplorer'));
 const TimetableManager = lazy(() => import('./features/admin/components/TimetableManager'));
+const TimetableCreate = lazy(() => import('./features/admin/components/timetable/CreateTimetablePage'));
+const TimetableEdit = lazy(() => import('./features/admin/components/timetable/EditTimetablePage'));
 const FacultyWorkload = lazy(() => import('./features/admin/components/FacultyWorkload'));
 const StudentConsole = lazy(() => import('./features/admin/components/StudentConsole'));
 const ExamConsole = lazy(() => import('./features/admin/components/ExamConsole'));
@@ -39,6 +41,7 @@ const FinancePanel = lazy(() => import('./features/admin/components/FinancePanel
 const SystemSettings = lazy(() => import('./features/admin/components/SystemSettings'));
 const FileGovernance = lazy(() => import('./features/admin/components/FileGovernance'));
 const FinanceDashboard = lazy(() => import('./features/finance/components/FinanceDashboard'));
+const SectionManagementPage = lazy(() => import('./features/admin/components/SectionManagementPage'));
 
 // Helper component for landing page redirect
 const RoleDashboardRedirect = () => {
@@ -75,9 +78,14 @@ function App() {
                   <Route path="/admin/dashboard" element={<Suspense fallback={<CardSkeleton />}><AdminDashboard /></Suspense>} />
                   <Route path="/admin/users" element={<Suspense fallback={<CardSkeleton />}><UserManagement /></Suspense>} />
                   <Route path="/admin/academic" element={<Suspense fallback={<CardSkeleton />}><AcademicExplorer /></Suspense>} />
+                  {/* Timetable — dashboard + two SEPARATE route-based pages (no stale state bleed) */}
                   <Route path="/admin/timetable" element={<Suspense fallback={<CardSkeleton />}><TimetableManager /></Suspense>} />
+                  {/* /new MUST come before /:id/edit so "new" isn't treated as an :id param */}
+                  <Route path="/admin/timetable/new" element={<Suspense fallback={<CardSkeleton />}><TimetableCreate /></Suspense>} />
+                  <Route path="/admin/timetable/:id/edit" element={<Suspense fallback={<CardSkeleton />}><TimetableEdit /></Suspense>} />
                   <Route path="/admin/faculty" element={<Suspense fallback={<CardSkeleton />}><FacultyWorkload /></Suspense>} />
                   <Route path="/admin/students" element={<Suspense fallback={<CardSkeleton />}><StudentConsole /></Suspense>} />
+                  <Route path="/admin/sections" element={<Suspense fallback={<CardSkeleton />}><SectionManagementPage /></Suspense>} />
                   <Route path="/admin/exams" element={<Suspense fallback={<CardSkeleton />}><ExamConsole /></Suspense>} />
                   <Route path="/admin/finance" element={<Suspense fallback={<CardSkeleton />}><FinancePanel /></Suspense>} />
                   <Route path="/admin/config" element={<Suspense fallback={<CardSkeleton />}><SystemSettings /></Suspense>} />

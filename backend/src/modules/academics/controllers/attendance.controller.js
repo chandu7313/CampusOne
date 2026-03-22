@@ -5,8 +5,10 @@ import { Op } from 'sequelize';
 
 // FACULTY: Mark or update attendance for a class
 export const markAttendance = catchAsync(async (req, res, next) => {
-    const { subjectId, date, records } = req.body;
+    const { subjectId, sectionId, date, records } = req.body;
     const { id: facultyId } = req.user;
+
+    if (!sectionId) return next(new AppError('sectionId is required to mark attendance', 400));
 
     // records: [{ studentId: 'uuid', status: 'Present', remarks: '' }]
 
@@ -14,6 +16,7 @@ export const markAttendance = catchAsync(async (req, res, next) => {
     const attendanceData = records.map(record => ({
         studentId: record.studentId,
         subjectId,
+        sectionId,
         facultyId,
         date,
         status: record.status,
@@ -93,20 +96,92 @@ export const getMyAttendance = catchAsync(async (req, res, next) => {
 
 // FACULTY: Get attendance for a specific class date
 export const getClassAttendance = catchAsync(async (req, res, next) => {
-    const { subjectId, date } = req.query;
+    const { subjectId, sectionId, date } = req.query;
 
-    if (!subjectId || !date) {
-        return next(new AppError('Please provide subjectId and date', 400));
+    if (!subjectId || !date || !sectionId) {
+        return next(new AppError('Please provide subjectId, sectionId, and date', 400));
     }
 
     const attendances = await Attendance.findAll({
-        where: { subjectId, date },
+        where: { subjectId, sectionId, date },
         include: [
             {
                 model: User,
                 as: 'student',
                 attributes: ['firstName', 'lastName'],
                 include: [{ model: StudentProfile, as: 'studentProfile', attributes: ['enrollmentNumber'] }]
+            }
+        ]
+    });
+
+    res.status(200).json({
+        status: 'success',
+        results: attendances.length,
+        data: attendances
+    });
+});
+
+// GET /api/v1/attendance/student/:studentId
+export const getStudentAttendance = catchAsync(async (req, res, next) => {
+    const { studentId } = req.params;
+
+    const attendances = await Attendance.findAll({
+        where: { studentId },
+        include: [
+            { model: Course, as: 'subject', attributes: ['name', 'code', 'credits'] }
+        ]
+    });
+
+    // Group by subject and calculate percentages
+    const stats = {};
+
+    attendances.forEach(att => {
+        const subId = att.subjectId;
+        if (!stats[subId]) {
+            stats[subId] = {
+                subject: att.subject,
+                total: 0,
+                present: 0,
+                absent: 0,
+                late: 0,
+                excused: 0
+            };
+        }
+
+        stats[subId].total += 1;
+        if (att.status === 'Present') stats[subId].present += 1;
+        else if (att.status === 'Absent') stats[subId].absent += 1;
+        else if (att.status === 'Late') stats[subId].late += 1;
+        else if (att.status === 'Excused') stats[subId].excused += 1;
+    });
+
+    const summary = Object.values(stats).map(s => ({
+        ...s,
+        percentage: s.total > 0 ? ((s.present + s.late + s.excused) / s.total) * 100 : 0
+    }));
+
+    res.status(200).json({
+        status: 'success',
+        data: summary
+    });
+});
+
+// GET /api/v1/attendance/section/:sectionId
+export const getSectionAttendance = catchAsync(async (req, res, next) => {
+    const { sectionId } = req.params;
+
+    const attendances = await Attendance.findAll({
+        where: { sectionId },
+        include: [
+            {
+                model: User,
+                as: 'student',
+                attributes: ['id', 'firstName', 'lastName']
+            },
+            {
+                model: Course,
+                as: 'subject',
+                attributes: ['id', 'name', 'code']
             }
         ]
     });

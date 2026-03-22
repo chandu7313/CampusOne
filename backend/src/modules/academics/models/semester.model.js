@@ -15,6 +15,10 @@ const Semester = sequelize.define('Semester', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
+    yearId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+    },
     academicYear: {
         type: DataTypes.STRING,
         allowNull: false,

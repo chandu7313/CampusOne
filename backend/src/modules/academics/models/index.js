@@ -7,6 +7,8 @@ import StudentSection from './studentSection.model.js';
 import SemesterSubject from './semesterSubject.model.js';
 import Classroom from './classroom.model.js';
 import TimeSlot from './timeSlot.model.js';
+import Year from './year.model.js';
+import Timetable from './timetable.model.js';
 import TimetableEntry from './timetableEntry.model.js';
 import FacultySubject from './facultySubject.model.js';
 import FacultyAssignment from './facultyAssignment.model.js';
@@ -16,8 +18,10 @@ export {
     Department,
     Program,
     Course,
+    Year,
     Semester,
     Section,
+    Timetable,
     StudentSection,
     SemesterSubject,
     Classroom,

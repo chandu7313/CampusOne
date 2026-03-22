@@ -6,7 +6,7 @@ import { AuditLog, SystemConfig } from '../modules/admin/models/index.js';
 import {
     Department, Program, Course,
     Semester, Section, StudentSection, SemesterSubject,
-    Classroom, TimeSlot, TimetableEntry,
+    Classroom, TimeSlot, TimetableEntry, Timetable, Year,
     FacultySubject, FacultyAssignment, Attendance
 } from '../modules/academics/models/index.js';
 import { StudentProfile, Enrollment, AdmissionLog } from '../modules/students/models/index.js';
@@ -52,8 +52,11 @@ Program.hasMany(Course, { foreignKey: 'programId', as: 'courses' });
 Course.belongsTo(Program, { foreignKey: 'programId', as: 'program' });
 
 // Semester Hierarchy
-Program.hasMany(Semester, { foreignKey: 'programId', as: 'semesters' });
-Semester.belongsTo(Program, { foreignKey: 'programId', as: 'program' });
+Program.hasMany(Year, { foreignKey: 'programId', as: 'years' });
+Year.belongsTo(Program, { foreignKey: 'programId', as: 'program' });
+
+Year.hasMany(Semester, { foreignKey: 'yearId', as: 'semesters' });
+Semester.belongsTo(Year, { foreignKey: 'yearId', as: 'year' });
 
 Semester.belongsToMany(Course, { through: SemesterSubject, foreignKey: 'semesterId', as: 'subjects' });
 Course.belongsToMany(Semester, { through: SemesterSubject, foreignKey: 'subjectId', as: 'semesters' });
@@ -61,19 +64,31 @@ Course.belongsToMany(Semester, { through: SemesterSubject, foreignKey: 'subjectI
 Semester.hasMany(Section, { foreignKey: 'semesterId', as: 'sections' });
 Section.belongsTo(Semester, { foreignKey: 'semesterId', as: 'semester' });
 
-// Section Allocation
-Section.belongsToMany(StudentProfile, { through: StudentSection, foreignKey: 'sectionId', as: 'students' });
-StudentProfile.belongsToMany(Section, { through: StudentSection, foreignKey: 'studentProfileId', as: 'sections' });
+// Timetable Header
+Section.hasOne(Timetable, { foreignKey: 'sectionId', as: 'timetable' });
+Timetable.belongsTo(Section, { foreignKey: 'sectionId', as: 'section' });
 
-// Timetable
+Department.hasMany(Timetable, { foreignKey: 'departmentId', as: 'timetables' });
+Timetable.belongsTo(Department, { foreignKey: 'departmentId', as: 'department' });
+
+Program.hasMany(Timetable, { foreignKey: 'programId', as: 'timetables' });
+Timetable.belongsTo(Program, { foreignKey: 'programId', as: 'program' });
+
+Year.hasMany(Timetable, { foreignKey: 'yearId', as: 'timetables' });
+Timetable.belongsTo(Year, { foreignKey: 'yearId', as: 'year' });
+
+Semester.hasMany(Timetable, { foreignKey: 'semesterId', as: 'timetables' });
+Timetable.belongsTo(Semester, { foreignKey: 'semesterId', as: 'semester' });
+
+// Timetable Entries
+Timetable.hasMany(TimetableEntry, { foreignKey: 'timetableId', as: 'entries' });
+TimetableEntry.belongsTo(Timetable, { foreignKey: 'timetableId', as: 'timetable' });
+
 TimeSlot.hasMany(TimetableEntry, { foreignKey: 'timeSlotId', as: 'entries' });
 TimetableEntry.belongsTo(TimeSlot, { foreignKey: 'timeSlotId', as: 'timeSlot' });
 
 Classroom.hasMany(TimetableEntry, { foreignKey: 'classroomId', as: 'entries' });
 TimetableEntry.belongsTo(Classroom, { foreignKey: 'classroomId', as: 'classroom' });
-
-Section.hasMany(TimetableEntry, { foreignKey: 'sectionId', as: 'timetableEntries' });
-TimetableEntry.belongsTo(Section, { foreignKey: 'sectionId', as: 'section' });
 
 Course.hasMany(TimetableEntry, { foreignKey: 'subjectId', as: 'timetableEntries' });
 TimetableEntry.belongsTo(Course, { foreignKey: 'subjectId', as: 'subject' });
@@ -217,5 +232,7 @@ export {
     PlacementOpportunity,
     PlacementApplication,
     EventRegistration,
-    Attendance
+    Attendance,
+    Timetable,
+    Year
 };

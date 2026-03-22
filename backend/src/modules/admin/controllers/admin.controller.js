@@ -9,9 +9,8 @@ import { Op } from 'sequelize';
 import { sequelize } from '../../../config/database.js';
 import { uploadImage } from '../../../utils/cloudinary.js';
 
-/**
- * Get aggregated institutional statistics for the Admin Dashboard
- */
+/*Get aggregated institutional statistics for the Admin Dashboard
+*/
 export const getDashboardStats = catchAsync(async (req, res, next) => {
     // 1. User Counts
     const studentCount = await User.count({ where: { role: 'Student' } });
@@ -92,8 +91,7 @@ export const getDashboardStats = catchAsync(async (req, res, next) => {
     await logAudit({ action: 'DASHBOARD_VIEW', resource: 'AdminDashboard' }, req);
 });
 
-/**
- * Get institutional activity logs (paginated)
+/* Get institutional activity logs (paginated)
  */
 export const getActivityLogs = catchAsync(async (req, res, next) => {
     const { page = 1, limit = 10, action, severity } = req.query;
@@ -126,8 +124,7 @@ export const getActivityLogs = catchAsync(async (req, res, next) => {
     });
 });
 
-/**
- * List all users with pagination and filters
+/* List all users with pagination and filters
  */
 export const getUsers = catchAsync(async (req, res, next) => {
     const { page = 1, limit = 10, search, role, isActive, department } = req.query;
@@ -165,8 +162,7 @@ export const getUsers = catchAsync(async (req, res, next) => {
     });
 });
 
-/**
- * Create a new user (Admin-only creation)
+/* Create a new user (Admin-only creation)
  */
 export const createUser = catchAsync(async (req, res, next) => {
     const {
@@ -269,8 +265,7 @@ export const createUser = catchAsync(async (req, res, next) => {
     }, req);
 });
 
-/**
- * Toggle user active status
+/*Toggle user active status
  */
 export const toggleUserStatus = catchAsync(async (req, res, next) => {
     const { id } = req.params;
@@ -293,16 +288,14 @@ export const toggleUserStatus = catchAsync(async (req, res, next) => {
     }, req);
 });
 
-/**
- * Get all system configurations
+/* Get all system configurations
  */
 export const getSystemConfigs = catchAsync(async (req, res, next) => {
     const configs = await SystemConfig.findAll();
     res.status(200).json({ status: 'success', data: configs });
 });
 
-/**
- * Update a specific system config
+/* Update a specific system config
  */
 export const updateSystemConfig = catchAsync(async (req, res, next) => {
     const { key } = req.params;

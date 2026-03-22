@@ -7,6 +7,10 @@ const TimetableEntry = sequelize.define('TimetableEntry', {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
     },
+    timetableId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+    },
     timeSlotId: {
         type: DataTypes.UUID,
         allowNull: false,
@@ -25,6 +29,16 @@ const TimetableEntry = sequelize.define('TimetableEntry', {
     },
     facultyId: {
         type: DataTypes.UUID,
+        allowNull: false,
+    },
+    dayOfWeek: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'Monday',
+    },
+    slotType: {
+        type: DataTypes.ENUM('LECTURE', 'LAB', 'TUTORIAL', 'BREAK'),
+        defaultValue: 'LECTURE',
         allowNull: false,
     },
     academicYear: {

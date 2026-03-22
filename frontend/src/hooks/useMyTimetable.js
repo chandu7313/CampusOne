@@ -6,7 +6,7 @@ export const useMyTimetable = () => {
         queryKey: ['my-timetable'],
         queryFn: async () => {
             const { data } = await apiClient.get('/academic/timetable/me');
-            return data.data; // Array of TimetableEntry
+            return data.data.entries; // Updated to use .entries
         }
     });
 };
