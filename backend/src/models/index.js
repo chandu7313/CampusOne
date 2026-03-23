@@ -10,7 +10,7 @@ import {
     FacultySubject, FacultyAssignment, Attendance
 } from '../modules/academics/models/index.js';
 import { StudentProfile, Enrollment, AdmissionLog } from '../modules/students/models/index.js';
-import { FeeStructure, StudentFee, Scholarship } from '../modules/finance/models/index.js';
+import { FeeStructure, StudentFee, Scholarship, FeePayment, FeeInstallment, SalaryStructure, EmployeeSalary, PayrollMonth, Payslip, SalaryRevision } from '../modules/finance/models/index.js';
 import {
     Exam, SubjectExam, ExamHallAssignment, ExamResult
 } from '../modules/exams/models/index.js';
@@ -156,6 +156,33 @@ StudentFee.belongsTo(FeeStructure, { foreignKey: 'feeStructureId', as: 'feeStruc
 StudentProfile.hasMany(Scholarship, { foreignKey: 'studentProfileId', as: 'scholarships' });
 Scholarship.belongsTo(StudentProfile, { foreignKey: 'studentProfileId', as: 'student' });
 
+// Fee Payments
+StudentFee.hasMany(FeePayment, { foreignKey: 'studentFeeId', as: 'payments' });
+FeePayment.belongsTo(StudentFee, { foreignKey: 'studentFeeId', as: 'studentFee' });
+
+StudentProfile.hasMany(FeePayment, { foreignKey: 'studentProfileId', as: 'feePayments' });
+FeePayment.belongsTo(StudentProfile, { foreignKey: 'studentProfileId', as: 'student' });
+
+// Fee Installments
+StudentFee.hasMany(FeeInstallment, { foreignKey: 'studentFeeId', as: 'installments' });
+FeeInstallment.belongsTo(StudentFee, { foreignKey: 'studentFeeId', as: 'studentFee' });
+
+// Salary
+User.hasMany(EmployeeSalary, { foreignKey: 'userId', as: 'salaries' });
+EmployeeSalary.belongsTo(User, { foreignKey: 'userId', as: 'employee' });
+
+SalaryStructure.hasMany(EmployeeSalary, { foreignKey: 'salaryStructureId', as: 'employeeAssignments' });
+EmployeeSalary.belongsTo(SalaryStructure, { foreignKey: 'salaryStructureId', as: 'structure' });
+
+PayrollMonth.hasMany(Payslip, { foreignKey: 'payrollMonthId', as: 'payslips' });
+Payslip.belongsTo(PayrollMonth, { foreignKey: 'payrollMonthId', as: 'payrollMonth' });
+
+User.hasMany(Payslip, { foreignKey: 'userId', as: 'payslips' });
+Payslip.belongsTo(User, { foreignKey: 'userId', as: 'employee' });
+
+User.hasMany(SalaryRevision, { foreignKey: 'userId', as: 'salaryRevisions' });
+SalaryRevision.belongsTo(User, { foreignKey: 'userId', as: 'employee' });
+
 // Announcements
 User.hasMany(Announcement, { foreignKey: 'authorId', as: 'announcements' });
 Announcement.belongsTo(User, { foreignKey: 'authorId', as: 'author' });
@@ -218,6 +245,13 @@ export {
     FeeStructure,
     StudentFee,
     Scholarship,
+    FeePayment,
+    FeeInstallment,
+    SalaryStructure,
+    EmployeeSalary,
+    PayrollMonth,
+    Payslip,
+    SalaryRevision,
     Exam,
     SubjectExam,
     ExamHallAssignment,

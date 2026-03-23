@@ -1,9 +1,11 @@
+import jwt from 'jsonwebtoken';
 import User from '../../users/models/user.model.js';
 import { generateToken } from '../utils/token.js';
 import catchAsync from '../../../utils/catchAsync.js';
 import AppError from '../../../utils/appError.js';
 import { logAudit } from '../../admin/utils/audit.util.js';
 import { Op } from 'sequelize';
+import redis from '../../../config/redis.js';
 
 export const login = catchAsync(async (req, res, next) => {
     const { email, password } = req.body;
@@ -63,6 +65,41 @@ export const login = catchAsync(async (req, res, next) => {
         }
     });
 });
+
+/**
+ * POST /api/v1/auth/logout
+ * Blacklists the current token in Redis for its remaining TTL.
+ */
+export const logout = catchAsync(async (req, res, next) => {
+    const token = req.headers.authorization?.split(' ')[1];
+
+    if (token) {
+        try {
+            const decoded = jwt.decode(token);
+            if (decoded?.exp) {
+                const ttl = decoded.exp - Math.floor(Date.now() / 1000);
+                if (ttl > 0) {
+                    await redis.setex(`blacklist:${token}`, ttl, '1');
+                }
+            }
+        } catch (err) {
+            console.error('Blacklist error:', err.message);
+        }
+    }
+
+    await logAudit({ action: 'LOGOUT', userId: req.user?.id }, req);
+    return res.status(200).json({ success: true, message: 'Logged out successfully.' });
+});
+
+/**
+ * Force-logout all sessions for a user (e.g. after password change).
+ * Any token issued before the stored timestamp will be rejected.
+ *
+ * @param {string|number} userId
+ */
+export const forceLogoutAllSessions = async (userId) => {
+    await redis.set(`force_logout:${userId}`, Date.now().toString(), 'EX', 86400);
+};
 
 export const initAdmin = catchAsync(async (req, res, next) => {
     const adminExists = await User.findOne({ where: { role: 'Admin' } });

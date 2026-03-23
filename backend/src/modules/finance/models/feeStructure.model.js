@@ -34,9 +34,19 @@ const FeeStructure = sequelize.define('FeeStructure', {
     otherFees: {
         type: DataTypes.DECIMAL(10, 2),
         defaultValue: 0,
+    },
+    description: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+    },
+    discountPercentage: {
+        type: DataTypes.DECIMAL(5, 2),
+        defaultValue: 0,
+        comment: 'Percentage discount applied to all students using this structure',
     }
 }, {
     timestamps: true,
 });
 
 export default FeeStructure;
+

@@ -5,14 +5,19 @@ import { useAuthStore } from '../../../store/authStore';
 
 const Navbar = ({ toggleSidebar }) => {
   const { theme, toggleTheme } = useTheme();
-  const { user, logout } = useAuthStore();
+  const { user, logout, notifications } = useAuthStore();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isNotifOpen, setIsNotifOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const notifRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
+      }
+      if (notifRef.current && !notifRef.current.contains(event.target)) {
+        setIsNotifOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -41,9 +46,42 @@ const Navbar = ({ toggleSidebar }) => {
           {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
         </button>
         
-        <div className="relative text-text-muted flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-200 hover:bg-border-custom hover:text-primary cursor-pointer">
-          <Bell size={20} />
-          <span className="absolute top-1 right-1 bg-primary text-white text-[0.7rem] px-1.5 py-0.5 rounded-full font-bold">12</span>
+        <div className="relative" ref={notifRef}>
+          <div 
+            className="text-text-muted flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-200 hover:bg-border-custom hover:text-primary cursor-pointer"
+            onClick={() => setIsNotifOpen(!isNotifOpen)}
+          >
+            <Bell size={20} />
+            {notifications?.length > 0 && (
+              <span className="absolute top-1 right-1 bg-primary text-white text-[0.7rem] px-1.5 py-0.5 rounded-full font-bold">
+                {notifications.length}
+              </span>
+            )}
+          </div>
+
+          {/* Notifications Dropdown */}
+          {isNotifOpen && (
+            <div className="absolute top-[calc(100%+8px)] right-0 w-[320px] rounded-xl border border-border-custom bg-bg-main shadow-lg animate-in fade-in slide-in-from-top-2 duration-200 z-[100] overflow-hidden">
+              <div className="px-4 py-3 border-b border-border-custom flex justify-between items-center">
+                <h3 className="font-semibold text-text-main">Notifications</h3>
+                <span className="text-[0.75rem] text-primary cursor-pointer hover:underline">Mark all as read</span>
+              </div>
+              <div className="max-h-[350px] overflow-y-auto">
+                {notifications?.length > 0 ? (
+                  notifications.map((notif, index) => (
+                    <div key={index} className="px-4 py-3 border-b border-border-custom hover:bg-surface-hover transition-colors cursor-pointer">
+                      <p className="text-[0.85rem] font-medium text-text-main mb-1">{notif.title}</p>
+                      <p className="text-[0.8rem] text-text-muted">{notif.message}</p>
+                    </div>
+                  ))
+                ) : (
+                  <div className="px-4 py-6 text-center text-text-muted text-[0.85rem]">
+                    No new notifications
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         <div 

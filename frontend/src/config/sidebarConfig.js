@@ -26,7 +26,9 @@ export const roleMenus = {
         { icon: Users, label: 'Faculty Load', path: '/admin/faculty' },
         { icon: ClipboardList, label: 'Student Console', path: '/admin/students' },
         { icon: FileText, label: 'Exam Console', path: '/admin/exams' },
-        { icon: Wallet, label: 'Finance Control', path: '/admin/finance' },
+        { icon: Wallet, label: 'Fee Management', path: '/admin/finance/fees' },
+        { icon: FileText, label: 'Payment History', path: '/admin/finance/payments' },
+        { icon: ClipboardCheck, label: 'Salary Control', path: '/admin/finance/salary' },
         { icon: Settings, label: 'System Config', path: '/admin/config' },
         { icon: ShieldCheck, label: 'File Governance', path: '/admin/files' },
     ],
@@ -64,8 +66,9 @@ export const roleMenus = {
     ],
     Finance: [
         { icon: LayoutDashboard, label: 'Finance Dashboard', path: '/finance/dashboard' },
-        { icon: Wallet, label: 'Transactions', path: '/finance/transactions' },
-        { icon: FileText, label: 'Fee Reports', path: '/finance/reports' },
-        { icon: ClipboardCheck, label: 'Payroll', path: '/finance/payroll' },
+        { icon: Wallet, label: 'Fee Management', path: '/finance/fees' },
+        { icon: FileText, label: 'Payment History', path: '/finance/history' },
+        { icon: ClipboardCheck, label: 'Salary Control', path: '/finance/salary' },
+        { icon: Users, label: 'Salary History', path: '/finance/salary-history' },
     ]
 };

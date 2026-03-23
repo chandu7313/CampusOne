@@ -21,12 +21,12 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       max-md:-translate-x-full
       ${isOpen ? 'max-md:translate-x-0 max-md:shadow-2xl' : ''}
     `}>
-      <div className="h-navbar flex items-center justify-between px-5 gap-3 border-b border-border-custom overflow-hidden">
+      <div className={`h-navbar flex items-center justify-between ${isOpen ? 'px-5 gap-3' : 'px-2 gap-0'}border-b border-border-custom overflow-hidden`}>
         <div className="flex items-center gap-3">
           <img 
             src={logo} 
             alt="CampusOne Logo" 
-            className={`w-auto object-contain transition-[height] duration-300 ${isOpen ? 'h-9' : 'h-8'}`} 
+            className='w-auto object-contain transition-[height] duration-300 h-9'  
           />
           {isOpen && (
             <span className="font-bold text-[1.1rem] tracking-tighter whitespace-nowrap">
@@ -36,9 +36,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         </div>
         <button 
           onClick={toggleSidebar} 
-          className="p-1.5 rounded-lg text-text-muted hover:bg-primary/5 hover:text-primary transition-all duration-200"
+          className={`cursor-pointer ${isOpen ? 'p-1.5' : 'ml-0 mr-auto pl-1'} rounded-lg text-text-muted hover:bg-primary/5 hover:text-primary transition-all duration-200 m-0`}
         >
-          {isOpen ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
+          {isOpen ? <ChevronLeft size={18} /> : <ChevronRight size={18}/>}
         </button>
       </div>
 

@@ -2,6 +2,7 @@ import express from 'express';
 import * as timetableController from './controllers/timetable.controller.js';
 import { protect } from '../../core/middlewares/auth.middleware.js';
 import { authorize } from '../../core/middlewares/security.middleware.js';
+import { cache } from '../../core/middlewares/cache.middleware.js';
 
 const router = express.Router();
 
@@ -9,7 +10,7 @@ router.use(protect);
 router.use(authorize('Admin'));
 
 // Spec-aligned routes
-router.get('/', timetableController.getTimetables);
+router.get('/', cache(900), timetableController.getTimetables);
 router.get('/filter', timetableController.filterTimetables);
 router.get('/available-sections', timetableController.getAvailableSections);
 router.get('/section/:sectionId', timetableController.getSectionTimetable);
@@ -30,7 +31,7 @@ router.post('/:id/slots', timetableController.addSlot);
 router.put('/:id/slots/:slotId', timetableController.updateSlot);
 router.delete('/:id/slots/:slotId', timetableController.deleteSlot);
 
-router.get('/:id', timetableController.getTimetableById);
+router.get('/:id', cache(600), timetableController.getTimetableById);
 
 export default router;
 

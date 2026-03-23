@@ -6,6 +6,8 @@ import catchAsync from '../../../utils/catchAsync.js';
 import AppError from '../../../utils/appError.js';
 import { logAudit } from '../../admin/utils/audit.util.js';
 import { Op } from 'sequelize';
+import { invalidateCache } from '../../../utils/invalidateCache.js';
+import { notify } from '../../../utils/notify.js';
 
 /**
  * GET /api/v1/timetables
@@ -119,6 +121,8 @@ export const createTimetable = catchAsync(async (req, res, next) => {
         data: timetable
     });
 
+    await invalidateCache('/api/v1/timetables*');
+
     await logAudit({
         action: 'TIMETABLE_CREATE',
         resource: 'Timetable',
@@ -159,6 +163,8 @@ export const updateTimetable = catchAsync(async (req, res, next) => {
         data: timetable
     });
 
+    await invalidateCache(`/api/v1/timetables/${id}*`, '/api/v1/timetables*');
+
     await logAudit({
         action: 'TIMETABLE_UPDATE',
         resource: 'Timetable',
@@ -186,6 +192,8 @@ export const deleteTimetable = catchAsync(async (req, res, next) => {
         status: 'success',
         data: null
     });
+
+    await invalidateCache('/api/v1/timetables*');
 
     await logAudit({
         action: 'TIMETABLE_DELETE',
@@ -457,6 +465,18 @@ export const addSlot = catchAsync(async (req, res, next) => {
     });
 
     res.status(201).json({ status: 'success', data: populated });
+
+    await invalidateCache(`/api/v1/timetables/${id}*`, '/api/v1/timetables*');
+
+    // Notify assigned faculty in real time
+    if (facultyId) {
+        await notify(facultyId, {
+            type: 'TIMETABLE_ASSIGNED',
+            title: 'New Class Assigned',
+            message: `You have been assigned a new timetable slot.`,
+            link: `/faculty/timetable`
+        });
+    }
 });
 
 /**
@@ -518,6 +538,18 @@ export const updateSlot = catchAsync(async (req, res, next) => {
 
     res.status(200).json({ status: 'success', data: populated });
 
+    await invalidateCache(`/api/v1/timetables/${id}*`, '/api/v1/timetables*');
+
+    // Notify reassigned faculty in real time
+    if (facultyId) {
+        await notify(facultyId, {
+            type: 'TIMETABLE_UPDATED',
+            title: 'Timetable Slot Updated',
+            message: `One of your timetable slots has been updated.`,
+            link: `/faculty/timetable`
+        });
+    }
+
     await logAudit({ action: 'SLOT_UPDATE', resource: 'TimetableEntry', resourceId: slotId }, req);
 });
 
@@ -534,6 +566,8 @@ export const deleteSlot = catchAsync(async (req, res, next) => {
     await entry.destroy();
 
     res.status(204).json({ status: 'success', data: null });
+
+    await invalidateCache(`/api/v1/timetables/${id}*`, '/api/v1/timetables*');
 
     await logAudit({ action: 'SLOT_DELETE', resource: 'TimetableEntry', resourceId: slotId }, req);
 });

@@ -7,6 +7,7 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 import { CardSkeleton } from './components/common/Skeleton';
 
 import { useAuthStore } from './store/authStore';
+import { useSocket } from './hooks/useSocket';
 
 // Lazy loaded components
 const StudentDashboard = lazy(() => import('./features/student/Dashboard'));
@@ -42,6 +43,10 @@ const SystemSettings = lazy(() => import('./features/admin/components/SystemSett
 const FileGovernance = lazy(() => import('./features/admin/components/FileGovernance'));
 const FinanceDashboard = lazy(() => import('./features/finance/components/FinanceDashboard'));
 const SectionManagementPage = lazy(() => import('./features/admin/components/SectionManagementPage'));
+const AdminFeeManagementPage = lazy(() => import('./features/finance/pages/AdminFeeManagementPage'));
+const AdminPaymentHistoryPage = lazy(() => import('./features/finance/pages/AdminPaymentHistoryPage'));
+const SalaryManagementPage = lazy(() => import('./features/finance/pages/SalaryManagementPage'));
+const SalaryHistoryPage = lazy(() => import('./features/finance/pages/SalaryHistoryPage'));
 
 // Helper component for landing page redirect
 const RoleDashboardRedirect = () => {
@@ -57,10 +62,16 @@ const RoleDashboardRedirect = () => {
   }
 };
 
+const GlobalSocketWrapper = ({ children }) => {
+  useSocket(); // Initializes socket listener if user is logged in
+  return children;
+};
+
 function App() {
   return (
     <ErrorBoundary>
       <BrowserRouter>
+        <GlobalSocketWrapper>
         <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<LoginForm />} />
@@ -87,7 +98,9 @@ function App() {
                   <Route path="/admin/students" element={<Suspense fallback={<CardSkeleton />}><StudentConsole /></Suspense>} />
                   <Route path="/admin/sections" element={<Suspense fallback={<CardSkeleton />}><SectionManagementPage /></Suspense>} />
                   <Route path="/admin/exams" element={<Suspense fallback={<CardSkeleton />}><ExamConsole /></Suspense>} />
-                  <Route path="/admin/finance" element={<Suspense fallback={<CardSkeleton />}><FinancePanel /></Suspense>} />
+                  <Route path="/admin/finance/fees" element={<Suspense fallback={<CardSkeleton />}><AdminFeeManagementPage /></Suspense>} />
+                  <Route path="/admin/finance/payments" element={<Suspense fallback={<CardSkeleton />}><AdminPaymentHistoryPage /></Suspense>} />
+                  <Route path="/admin/finance/salary" element={<Suspense fallback={<CardSkeleton />}><SalaryManagementPage /></Suspense>} />
                   <Route path="/admin/config" element={<Suspense fallback={<CardSkeleton />}><SystemSettings /></Suspense>} />
                   <Route path="/admin/files" element={<Suspense fallback={<CardSkeleton />}><FileGovernance /></Suspense>} />
                   <Route path="/admin/*" element={<Suspense fallback={<CardSkeleton />}><AdminDashboard /></Suspense>} />
@@ -96,7 +109,11 @@ function App() {
                 {/* Finance Routes */}
                 <Route element={<ProtectedRoute allowedRoles={['Finance']} />}>
                   <Route path="/finance/dashboard" element={<Suspense fallback={<CardSkeleton />}><FinanceDashboard /></Suspense>} />
-                  <Route path="/finance/*" element={<Suspense fallback={<CardSkeleton />}><FinanceDashboard /></Suspense>} />
+                  <Route path="/finance/fees" element={<Suspense fallback={<CardSkeleton />}><AdminFeeManagementPage /></Suspense>} />
+                  <Route path="/finance/history" element={<Suspense fallback={<CardSkeleton />}><AdminPaymentHistoryPage /></Suspense>} />
+                  <Route path="/finance/salary" element={<Suspense fallback={<CardSkeleton />}><SalaryManagementPage /></Suspense>} />
+                  <Route path="/finance/salary-history" element={<Suspense fallback={<CardSkeleton />}><SalaryHistoryPage /></Suspense>} />
+                  <Route path="/finance/*" element={<Navigate to="/finance/dashboard" replace />} />
                 </Route>
 
                 {/* HOD Routes */}
@@ -148,6 +165,7 @@ function App() {
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
+        </GlobalSocketWrapper>
       </BrowserRouter>
     </ErrorBoundary>
   );

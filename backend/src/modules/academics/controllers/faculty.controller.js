@@ -7,6 +7,7 @@ import AppError from '../../../utils/appError.js';
 import { logAudit } from '../../admin/utils/audit.util.js';
 import { sequelize } from '../../../config/database.js';
 import { Op } from 'sequelize';
+import { invalidateCache } from '../../../utils/invalidateCache.js';
 
 /**
  * Get all faculty profiles with filters
@@ -84,6 +85,8 @@ export const allocateSectionSubject = catchAsync(async (req, res, next) => {
     const assignment = await FacultyAssignment.create(req.body);
 
     res.status(201).json({ status: 'success', data: assignment });
+
+    await invalidateCache('/api/v1/academic/faculty*');
 
     await logAudit({
         action: 'FACULTY_ASSIGNMENT_CREATE',

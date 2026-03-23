@@ -17,8 +17,10 @@ import communicationRoutes from './modules/communication/routes.js';
 import placementRoutes from './modules/placements/routes.js';
 import dashboardRoutes from './modules/dashboard/routes.js';
 import userRoutes from './modules/users/routes.js';
+import notificationRoutes from './modules/communication/notification.routes.js';
 import * as models from './models/index.js';
 import { sequelize } from './config/database.js';
+import { rateLimitMiddleware, apiRateLimiter } from './core/middlewares/rateLimiter.middleware.js';
 
 const app = express();
 
@@ -42,6 +44,9 @@ app.use(cors({
 // Body parser
 app.use(express.json({ limit: '10kb' }));
 
+// General API rate limiter — 100 req/min per IP
+app.use('/api', rateLimitMiddleware(apiRateLimiter));
+
 // Routes
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/admin', adminRoutes);
@@ -55,6 +60,7 @@ app.use('/api/v1/communication', communicationRoutes);
 app.use('/api/v1/placements', placementRoutes);
 app.use('/api/v1/dashboard', dashboardRoutes);
 app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/notifications', notificationRoutes);
 
 // Health check
 app.get('/', (req, res) => {

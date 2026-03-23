@@ -7,6 +7,7 @@ import catchAsync from '../../../utils/catchAsync.js';
 import AppError from '../../../utils/appError.js';
 import logger from '../../../utils/logger.js';
 import { logAudit } from '../../admin/utils/audit.util.js';
+import { invalidateCache } from '../../../utils/invalidateCache.js';
 
 /**
  * Get the full academic hierarchy (Explorer View)
@@ -89,6 +90,7 @@ export const createProgram = catchAsync(async (req, res, next) => {
     }
 
     res.status(201).json({ status: 'success', data: program });
+    await invalidateCache('/api/v1/academic*');
     await logAudit({ action: 'PROGRAM_CREATE', resource: 'Program', resourceId: program.id }, req);
 });
 
@@ -250,6 +252,7 @@ export const getSectionStudents = catchAsync(async (req, res, next) => {
 export const createDepartment = catchAsync(async (req, res, next) => {
     const dept = await Department.create(req.body);
     res.status(201).json({ status: 'success', data: dept });
+    await invalidateCache('/api/v1/academic*');
     await logAudit({ action: 'DEPT_CREATE', resource: 'Department', resourceId: dept.id }, req);
 });
 
@@ -350,6 +353,7 @@ export const initializeProgram = catchAsync(async (req, res, next) => {
         }
     });
 
+    await invalidateCache('/api/v1/academic*');
     await logAudit({
         action: 'PROGRAM_INITIALIZE',
         resource: 'Program',
@@ -366,6 +370,7 @@ export const updateDepartment = catchAsync(async (req, res, next) => {
     if (!dept) return next(new AppError('Department not found', 404));
     await dept.update(req.body);
     res.status(200).json({ status: 'success', data: dept });
+    await invalidateCache('/api/v1/academic*');
 });
 
 /**
@@ -380,6 +385,7 @@ export const deleteDepartment = catchAsync(async (req, res, next) => {
         return next(new AppError('Cannot delete department with active programs. Remove all programs first.', 400));
     }
     await dept.destroy();
+    await invalidateCache('/api/v1/academic*');
     res.status(204).json({ status: 'success', data: null });
 });
 
@@ -437,12 +443,15 @@ export const deleteProgram = catchAsync(async (req, res, next) => {
     await program.destroy();
 
     await logAudit({ action: 'PROGRAM_FORCE_DELETE', resource: 'Program', resourceId: programId }, req);
+    await invalidateCache('/api/v1/academic*');
     return res.status(200).json({
         status: 'success',
         message: 'Program and all associated data permanently deleted.',
         deleted: { years: yearIds.length, semesters: semesterIds.length }
     });
 });
+
+// (safe delete path — no children — handled by the early return above)
 
 /**
  * DELETE /academic/years/:id  — cascades: Sections → Semesters → Year

@@ -6,6 +6,7 @@ import * as attendanceController from './controllers/attendance.controller.js';
 import * as authoritiesController from './controllers/authorities.controller.js';
 import { protect } from '../../core/middlewares/auth.middleware.js';
 import { authorize } from '../../core/middlewares/security.middleware.js';
+import { cache } from '../../core/middlewares/cache.middleware.js';
 
 const router = express.Router();
 
@@ -27,7 +28,7 @@ router.get('/attendance/section/:sectionId', authorize('Faculty', 'Admin'), atte
 router.use(authorize('Admin'));
 
 // Hierarchy & Courses
-router.get('/hierarchy', academicController.getAcademicHierarchy);
+router.get('/hierarchy', cache(3600), academicController.getAcademicHierarchy);
 router.get('/courses', academicController.getCourses);
 router.post('/courses', academicController.createCourse);
 
@@ -55,7 +56,7 @@ router.delete('/sections/:id', academicController.deleteSection);
 router.post('/sections/allocate', academicController.allocateStudentsToSection);
 
 // Faculty
-router.get('/faculty', facultyController.getFaculty);
+router.get('/faculty', cache(1800), facultyController.getFaculty);
 router.post('/faculty/assign-competency', facultyController.assignCompetency);
 router.post('/faculty/allocate-section', facultyController.allocateSectionSubject);
 router.get('/faculty/workload/:id', facultyController.getFacultyWorkload);
