@@ -26,7 +26,7 @@ export const useAuthStore = create(
                 const { token } = get();
                 if (!token) return;
                 try {
-                    const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/v1/notifications`, {
+                    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000'}/api/v1/notifications`, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
                     const data = await response.json();
