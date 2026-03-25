@@ -25,9 +25,9 @@ const LoginForm = () => {
     
     try {
       const response = await apiClient.post('/auth/login', { email, password });
-      const { token, data } = response.data;
+      const { token, refreshToken, data } = response.data;
       
-      setAuth(data.user, token);
+      setAuth(data.user, token, refreshToken);
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please check your credentials.');

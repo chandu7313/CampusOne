@@ -6,12 +6,13 @@ export const useAuthStore = create(
         (set, get) => ({
             user: null,
             token: null,
+            refreshToken: null,
             isAuthenticated: false,
             _hasHydrated: false,
             notifications: [],
 
-            setAuth: (user, token) => {
-                set({ user, token, isAuthenticated: !!user });
+            setAuth: (user, token, refreshToken) => {
+                set({ user, token, refreshToken, isAuthenticated: !!user });
                 if (user) {
                     get().fetchNotifications();
                 }
@@ -42,7 +43,7 @@ export const useAuthStore = create(
             setHasHydrated: (state) => set({ _hasHydrated: state }),
 
             logout: () => {
-                set({ user: null, token: null, isAuthenticated: false, notifications: [] });
+                set({ user: null, token: null, refreshToken: null, isAuthenticated: false, notifications: [] });
             }
         }),
         {

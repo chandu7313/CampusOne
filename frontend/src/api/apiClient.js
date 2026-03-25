@@ -32,9 +32,10 @@ apiClient.interceptors.response.use(
         ) {
             originalRequest._retry = true;
             try {
+                const refreshToken = useAuthStore.getState().refreshToken;
                 const { data } = await axios.post(
                     `${apiClient.defaults.baseURL}/auth/refresh`,
-                    {},
+                    { refreshToken },
                     { withCredentials: true }
                 );
 

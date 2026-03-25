@@ -12,8 +12,9 @@ export const useSocket = () => {
     useEffect(() => {
         if (!user?.id) return;
 
-        // Connect to Socket.io server
-        socket = io(import.meta.env.VITE_API_URL || 'http://localhost:4000', {
+        // Connect to Socket.io server - stripping /api/v1 for socket connection
+        const socketUrl = (import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000').replace('/api/v1', '');
+        socket = io(socketUrl, {
             query: { userId: user.id },
             withCredentials: true,
         });

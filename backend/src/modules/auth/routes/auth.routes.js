@@ -6,6 +6,7 @@ import { rateLimitMiddleware, loginRateLimiter } from '../../../core/middlewares
 const router = express.Router();
 
 router.post('/login', rateLimitMiddleware(loginRateLimiter), authController.login);
+router.post('/refresh', authController.refresh);
 router.post('/logout', protect, authController.logout);
 router.post('/init-admin', authController.initAdmin);
 

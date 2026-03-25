@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import User from '../../users/models/user.model.js';
-import { generateToken } from '../utils/token.js';
+import { generateToken, generateRefreshToken } from '../utils/token.js';
 import catchAsync from '../../../utils/catchAsync.js';
 import AppError from '../../../utils/appError.js';
 import { logAudit } from '../../admin/utils/audit.util.js';
@@ -50,10 +50,12 @@ export const login = catchAsync(async (req, res, next) => {
     await logAudit({ action: 'LOGIN_SUCCESS', userId: user.id }, req);
 
     const token = generateToken(user.id);
+    const refreshToken = generateRefreshToken(user.id);
 
     res.status(200).json({
         status: 'success',
         token,
+        refreshToken,
         data: {
             user: {
                 id: user.id,
@@ -63,6 +65,34 @@ export const login = catchAsync(async (req, res, next) => {
                 department: user.department
             }
         }
+    });
+});
+
+/**
+ * POST /api/v1/auth/refresh
+ * Generates a new access token using a valid refresh token.
+ */
+export const refresh = catchAsync(async (req, res, next) => {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+        return next(new AppError('No refresh token provided', 401));
+    }
+
+    // Verify refresh token
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+
+    // Check if user still exists
+    const user = await User.findByPk(decoded.id);
+    if (!user) {
+        return next(new AppError('User no longer exists', 401));
+    }
+
+    const token = generateToken(user.id);
+
+    res.status(200).json({
+        status: 'success',
+        accessToken: token // frontend expects 'accessToken' based on apiClient.js:41
     });
 });
 
