@@ -112,12 +112,54 @@ export default function StudentFees() {
                                         <span className="text-text-muted">Tuition Fee</span>
                                         <span className="text-text-main font-bold">{formatCurrency(activeFee.feeStructure?.tuitionFee)}</span>
                                     </div>
-                                    <div className="flex justify-between items-center p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-border-custom/50">
-                                        <span className="text-text-muted">Library / Lab / Other</span>
-                                        <span className="text-text-main">
-                                            {formatCurrency(Number(activeFee.feeStructure?.libraryFee || 0) + Number(activeFee.feeStructure?.labFee || 0) + Number(activeFee.feeStructure?.otherFees || 0))}
-                                        </span>
+                                    <div className="grid grid-cols-2 gap-3 mt-2">
+                                        <div className="flex justify-between items-center p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-border-custom/50">
+                                            <span className="text-text-muted text-xs">Library Fee</span>
+                                            <span className="text-text-main font-semibold text-sm">{formatCurrency(activeFee.feeStructure?.libraryFee)}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-border-custom/50">
+                                            <span className="text-text-muted text-xs">Lab Fee</span>
+                                            <span className="text-text-main font-semibold text-sm">{formatCurrency(activeFee.feeStructure?.labFee)}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-border-custom/50">
+                                            <span className="text-text-muted text-xs">Exam Fee</span>
+                                            <span className="text-text-main font-semibold text-sm">{formatCurrency(activeFee.feeStructure?.examinationFee)}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-border-custom/50">
+                                            <span className="text-text-muted text-xs">Sports Fee</span>
+                                            <span className="text-text-main font-semibold text-sm">{formatCurrency(activeFee.feeStructure?.sportsFee)}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-border-custom/50">
+                                            <span className="text-text-muted text-xs">Hostel Fee</span>
+                                            <span className="text-text-main font-semibold text-sm">{formatCurrency(activeFee.feeStructure?.hostelFee)}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-border-custom/50">
+                                            <span className="text-text-muted text-xs">Transport Bus</span>
+                                            <span className="text-text-main font-semibold text-sm">{formatCurrency(activeFee.feeStructure?.transportFee)}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-border-custom/50">
+                                            <span className="text-text-muted text-xs">Development</span>
+                                            <span className="text-text-main font-semibold text-sm">{formatCurrency(activeFee.feeStructure?.developmentFee)}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-border-custom/50">
+                                            <span className="text-text-muted text-xs">Medical Fee</span>
+                                            <span className="text-text-main font-semibold text-sm">{formatCurrency(activeFee.feeStructure?.medicalFee)}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-border-custom/50">
+                                            <span className="text-text-muted text-xs">Miscellaneous</span>
+                                            <span className="text-text-main font-semibold text-sm">{formatCurrency(activeFee.feeStructure?.miscellaneous)}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-border-custom/50">
+                                            <span className="text-text-muted text-xs">Other Charges</span>
+                                            <span className="text-text-main font-semibold text-sm">{formatCurrency(activeFee.feeStructure?.otherFees)}</span>
+                                        </div>
                                     </div>
+                                    {Number(activeFee.fineAmount) > 0 && (
+                                        <div className="flex justify-between items-center p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 mt-2">
+                                            <span>Late Fine (Overdue)</span>
+                                            <span className="font-bold">+ {formatCurrency(activeFee.fineAmount)}</span>
+                                        </div>
+                                    )}
                                     {Number(activeFee.scholarshipAmount) > 0 && (
                                         <div className="flex justify-between items-center p-3 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400">
                                             <span>Scholarship Applied</span>

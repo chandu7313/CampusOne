@@ -43,22 +43,36 @@ const StudentDashboard = () => {
                 {/* Quick Insights Grid - Moved from side to main content flow */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {/* Fee Quick Insight */}
-                    <div className="glass-card p-8 bg-emerald-500/5 border-emerald-500/10 relative overflow-hidden group">
+                    {summary?.fees && (
+                    <div className={`glass-card p-8 bg-black/5 dark:bg-white/5 border-l-4 relative overflow-hidden group ${
+                        summary.fees.status === 'Paid' ? 'border-l-emerald-500' :
+                        summary.fees.status === 'Overdue' ? 'border-l-rose-500' : 'border-l-amber-500'
+                    }`}>
                         <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:rotate-12 transition-transform duration-700">
                             <Wallet size={120} />
                         </div>
-                        <h4 className="text-xs font-black uppercase tracking-[0.3em] text-emerald-500 mb-8 px-1">Financial Pulse</h4>
+                        <h4 className="text-xs font-black uppercase tracking-[0.3em] text-text-muted opacity-60 mb-8 px-1">Financial Pulse</h4>
                         <div className="space-y-6 relative z-10">
                             <div className="flex flex-col">
-                                <span className="text-[0.65rem] font-bold text-text-muted uppercase tracking-widest mb-1">Total Outstanding</span>
-                                <span className="text-3xl font-black text-emerald-500 tabular-nums tracking-tighter cursor-default">${summary?.fees?.pending?.toLocaleString()}</span>
+                                <span className="text-[0.65rem] font-bold text-text-muted uppercase tracking-widest mb-1">
+                                    {summary.fees.status === 'Paid' ? 'All Cleared' : 'Total Outstanding'}
+                                </span>
+                                <span className={`text-3xl font-black tabular-nums tracking-tighter cursor-default ${
+                                    summary.fees.status === 'Paid' ? 'text-emerald-500' :
+                                    summary.fees.status === 'Overdue' ? 'text-rose-500' : 'text-amber-500'
+                                }`}>
+                                    ₹{summary.fees.pending?.toLocaleString('en-IN') || 0}
+                                </span>
                             </div>
                             <div className="flex gap-3">
-                                <button className="flex-1 py-3 bg-emerald-500 text-white rounded-2xl text-[0.7rem] font-black uppercase tracking-widest hover:shadow-lg hover:shadow-emerald-500/30 transition-all border-none cursor-pointer">Pay Now</button>
-                                <button className="p-3 bg-emerald-500/10 text-emerald-500 rounded-2xl hover:bg-emerald-500 hover:text-white transition-all border-none cursor-pointer"><Download size={18} /></button>
+                                {summary.fees.status !== 'Paid' && (
+                                <button className="flex-1 py-3 bg-primary text-white rounded-2xl text-[0.7rem] font-black uppercase tracking-widest hover:shadow-lg hover:shadow-primary/30 transition-all border-none cursor-pointer">Pay Now</button>
+                                )}
+                                <button className="p-3 bg-primary/10 text-primary rounded-2xl hover:bg-primary hover:text-white transition-all border-none cursor-pointer"><Download size={18} /></button>
                             </div>
                         </div>
                     </div>
+                    )}
 
                     {/* Quick Activity Radar - Item 1 */}
                     <div className="glass-card p-8 flex flex-col justify-between border-t-4 border-t-primary">

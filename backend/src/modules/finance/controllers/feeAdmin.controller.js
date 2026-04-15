@@ -42,6 +42,20 @@ export const deleteFeeStructure = catchAsync(async (req, res, next) => {
     res.status(204).send();
 });
 
+export const duplicateFeeStructure = catchAsync(async (req, res, next) => {
+    const { id } = req.params;
+    const structure = await FeeStructure.findByPk(id);
+    if (!structure) return next(new AppError('Fee structure not found', 404));
+
+    const newStructureData = structure.toJSON();
+    delete newStructureData.id;
+    newStructureData.academicYear = req.body.academicYear || newStructureData.academicYear;
+    newStructureData.semester = req.body.semester || newStructureData.semester;
+
+    const newStructure = await FeeStructure.create(newStructureData);
+    res.status(201).json({ status: 'success', data: newStructure });
+});
+
 /** ── Student Fee Assignment ── */
 export const getStudentFeesList = catchAsync(async (req, res, next) => {
     const { status, programId, search, page = 1, limit = 20 } = req.query;
@@ -105,6 +119,25 @@ export const updateStudentFee = catchAsync(async (req, res, next) => {
     await fee.update(req.body);
     res.status(200).json({ status: 'success', data: fee });
     logAudit({ action: 'FEE_UPDATE', resource: 'StudentFee', resourceId: id }, req);
+});
+
+export const assignStudentFeeBulk = catchAsync(async (req, res, next) => {
+    const { studentProfileIds, feeStructureId, overrides } = req.body;
+    if (!studentProfileIds || !studentProfileIds.length) return next(new AppError('No students provided', 400));
+    
+    const structure = await FeeStructure.findByPk(feeStructureId);
+    if (!structure) return next(new AppError('Fee structure not found', 404));
+
+    const feesData = studentProfileIds.map(studentId => ({
+        studentProfileId: studentId,
+        feeStructureId,
+        totalAmount: overrides?.totalAmount || structure.tuitionFee + structure.libraryFee + structure.labFee + structure.otherFees,
+        dueDate: overrides?.dueDate || new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), // Default +15 days
+        ...overrides
+    }));
+
+    const studentFees = await StudentFee.bulkCreate(feesData);
+    res.status(201).json({ status: 'success', data: studentFees });
 });
 
 export const deleteStudentFee = catchAsync(async (req, res, next) => {
@@ -247,4 +280,73 @@ export const getAllPayments = catchAsync(async (req, res, next) => {
         currentPage: Number(page),
         data: payments.rows,
     });
+});
+
+export const reversePayment = catchAsync(async (req, res, next) => {
+    const { paymentId } = req.params;
+    const { reason } = req.body;
+    
+    const result = await sequelize.transaction(async (t) => {
+        const payment = await FeePayment.findByPk(paymentId, { transaction: t });
+        if (!payment) throw new AppError('Payment not found', 404);
+        if (payment.isReversed) throw new AppError('Payment already reversed', 400);
+
+        payment.isReversed = true;
+        payment.status = 'Reversed';
+        payment.reversedBy = req.user.id;
+        payment.reversedAt = new Date();
+        payment.reversalReason = reason;
+        await payment.save({ transaction: t });
+
+        // Update StudentFee
+        const fee = await StudentFee.findByPk(payment.studentFeeId, { transaction: t });
+        if (fee) {
+            fee.paidAmount = Math.max(0, Number(fee.paidAmount) - Number(payment.amountPaid));
+            fee.status = fee.paidAmount >= fee.finalAmount ? 'Paid' : (fee.paidAmount > 0 ? 'Partial' : 'Pending');
+            await fee.save({ transaction: t });
+        }
+        return payment;
+    });
+
+    res.status(200).json({ status: 'success', data: result });
+});
+
+export const getDefaulters = catchAsync(async (req, res, next) => {
+    const fees = await StudentFee.findAll({
+        where: {
+            status: { [Op.in]: ['Pending', 'Partial', 'Overdue'] },
+            dueDate: { [Op.lt]: new Date() }
+        },
+        include: [
+            {
+                model: StudentProfile,
+                as: 'student',
+                include: [{ model: User, as: 'user', attributes: ['name', 'email'] }]
+            },
+            { model: FeeStructure, as: 'feeStructure' }
+        ],
+        order: [['dueDate', 'ASC']]
+    });
+
+    res.status(200).json({ status: 'success', results: fees.length, data: fees });
+});
+
+export const getCollectionReport = catchAsync(async (req, res, next) => {
+    const { month } = req.query; // e.g. '2026-03'
+    const where = { status: 'Success' };
+    
+    if (month) {
+        const startDate = new Date(`${month}-01`);
+        const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);
+        where.paymentDate = { [Op.between]: [startDate, endDate] };
+    }
+
+    const { sum } = await FeePayment.findOne({
+        where,
+        attributes: [
+            [sequelize.fn('SUM', sequelize.col('amountPaid')), 'totalCollection']
+        ]
+    });
+
+    res.status(200).json({ status: 'success', data: { totalCollection: sum?.totalCollection ?? 0 } });
 });

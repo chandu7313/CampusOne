@@ -2,6 +2,7 @@ import express from 'express';
 import * as feeAdmin from './controllers/feeAdmin.controller.js';
 import * as feeStudent from './controllers/feeStudent.controller.js';
 import * as salaryAdmin from './controllers/salaryAdmin.controller.js';
+import * as receipt from './controllers/receipt.controller.js';
 import { protect } from '../../core/middlewares/auth.middleware.js';
 import { authorize } from '../../core/middlewares/security.middleware.js';
 
@@ -16,7 +17,7 @@ router.use(protect);
 router.get('/fees/me', authorize('Student'), feeStudent.getMyFees);
 router.post('/fees/pay', authorize('Student'), feeStudent.processPayment);
 router.get('/fees/payments/me', authorize('Student'), feeStudent.getMyPaymentHistory);
-router.get('/fees/payments/:paymentId/receipt', authorize('Student', 'Admin', 'Finance'), feeStudent.getReceipt);
+router.get('/fees/payments/:paymentId/receipt', authorize('Student', 'Admin', 'Finance'), receipt.downloadPDFReceipt);
 
 // ─────────────────────────────────────────────
 // ADMIN / FINANCE — FEE MANAGEMENT
@@ -32,6 +33,7 @@ router.delete('/fee-structures/:id', adminOnly, feeAdmin.deleteFeeStructure);
 // Student Fee Assignment
 router.get('/fees', adminOnly, feeAdmin.getStudentFeesList);
 router.post('/fees/assign', adminOnly, feeAdmin.assignStudentFee);
+router.post('/fees/assign-bulk', adminOnly, feeAdmin.assignStudentFeeBulk);
 router.put('/fees/:id', adminOnly, feeAdmin.updateStudentFee);
 router.delete('/fees/:id', adminOnly, feeAdmin.deleteStudentFee);
 
@@ -44,9 +46,12 @@ router.patch('/scholarships/:scholarshipId/approve', adminOnly, feeAdmin.approve
 
 // Payment History (admin)
 router.get('/payments', adminOnly, feeAdmin.getAllPayments);
+router.post('/payments/:paymentId/reverse', adminOnly, feeAdmin.reversePayment);
 
 // Finance Overview
 router.get('/overview', adminOnly, feeAdmin.getFinanceOverview);
+router.get('/reports/defaulters', adminOnly, feeAdmin.getDefaulters);
+router.get('/reports/collection', adminOnly, feeAdmin.getCollectionReport);
 
 // ─────────────────────────────────────────────
 // ADMIN / FINANCE — SALARY STRUCTURES (TEMPLATES)

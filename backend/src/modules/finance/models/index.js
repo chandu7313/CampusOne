@@ -9,7 +9,10 @@ import PayrollMonth from './payrollMonth.model.js';
 import Payslip from './payslip.model.js';
 import SalaryRevision from './salaryRevision.model.js';
 
+import FeeCategory from './feeCategory.model.js';
+
 export {
+    FeeCategory,
     FeeStructure,
     StudentFee,
     Scholarship,

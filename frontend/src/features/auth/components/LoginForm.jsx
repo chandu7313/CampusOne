@@ -36,6 +36,23 @@ const LoginForm = () => {
     }
   };
 
+  const handleTestLogin = async (role) => {
+    setLoading(true);
+    setError('');
+    
+    try {
+      const response = await apiClient.post('/auth/test-login', { role });
+      const { token, refreshToken, data } = response.data;
+      
+      setAuth(data.user, token, refreshToken);
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err.response?.data?.message || `Failed to login quickly as ${role}.`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="h-screen flex flex-col lg:flex-row bg-bg-main overflow-hidden">
       {/* Left Side: Highlights and Carousel Section */}
@@ -137,6 +154,42 @@ const LoginForm = () => {
               {loading ? <Loader2 className="animate-spin" size={20} /> : 'Sign In'}
             </button>
           </form>
+
+          {/* Quick Login Options */}
+          <div className="flex flex-col gap-3 pt-2">
+            <div className="relative flex items-center mb-2">
+              <div className="flex-grow border-t border-border-custom"></div>
+              <span className="flex-shrink-0 mx-4 text-text-muted text-xs font-semibold uppercase tracking-wider">Quick Login (Dev)</span>
+              <div className="flex-grow border-t border-border-custom"></div>
+            </div>
+            
+            <div className="grid grid-cols-3 gap-3">
+              <button
+                type="button"
+                onClick={() => handleTestLogin('Admin')}
+                disabled={loading}
+                className="py-2.5 px-3 rounded-lg border border-border-custom bg-bg-main/50 text-text-main text-sm font-semibold hover:bg-primary hover:text-white hover:border-primary transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
+              >
+                Admin
+              </button>
+              <button
+                type="button"
+                onClick={() => handleTestLogin('Student')}
+                disabled={loading}
+                className="py-2.5 px-3 rounded-lg border border-border-custom bg-bg-main/50 text-text-main text-sm font-semibold hover:bg-primary hover:text-white hover:border-primary transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
+              >
+                Student
+              </button>
+              <button
+                type="button"
+                onClick={() => handleTestLogin('Faculty')}
+                disabled={loading}
+                className="py-2.5 px-3 rounded-lg border border-border-custom bg-bg-main/50 text-text-main text-sm font-semibold hover:bg-primary hover:text-white hover:border-primary transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
+              >
+                Faculty
+              </button>
+            </div>
+          </div>
 
           <div className="flex items-center justify-center gap-2.5 text-text-muted text-[0.8rem] pt-2 border-t border-border-custom/50">
             <Shield size={16} />

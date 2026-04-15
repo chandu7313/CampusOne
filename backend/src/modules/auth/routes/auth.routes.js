@@ -9,5 +9,6 @@ router.post('/login', rateLimitMiddleware(loginRateLimiter), authController.logi
 router.post('/refresh', authController.refresh);
 router.post('/logout', protect, authController.logout);
 router.post('/init-admin', authController.initAdmin);
+router.post('/test-login', authController.testLogin);
 
 export default router;

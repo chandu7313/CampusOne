@@ -69,6 +69,42 @@ export const login = catchAsync(async (req, res, next) => {
 });
 
 /**
+ * POST /api/v1/auth/test-login
+ * Development-only endpoint to log in rapidly using just a role.
+ */
+export const testLogin = catchAsync(async (req, res, next) => {
+    const { role } = req.body;
+
+    if (!role) {
+        return next(new AppError('Please provide a role', 400));
+    }
+
+    const user = await User.findOne({ where: { role } });
+
+    if (!user) {
+        return next(new AppError(`No user found with role ${role}`, 404));
+    }
+
+    const token = generateToken(user.id);
+    const refreshToken = generateRefreshToken(user.id);
+
+    res.status(200).json({
+        status: 'success',
+        token,
+        refreshToken,
+        data: {
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                department: user.department
+            }
+        }
+    });
+});
+
+/**
  * POST /api/v1/auth/refresh
  * Generates a new access token using a valid refresh token.
  */

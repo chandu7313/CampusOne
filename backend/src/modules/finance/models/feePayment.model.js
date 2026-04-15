@@ -46,8 +46,24 @@ const FeePayment = sequelize.define('FeePayment', {
         allowNull: true,
     },
     status: {
-        type: DataTypes.ENUM('Success', 'Failed', 'Pending'),
+        type: DataTypes.ENUM('Success', 'Failed', 'Pending', 'Reversed'),
         defaultValue: 'Success',
+    },
+    isReversed: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+    },
+    reversedBy: {
+        type: DataTypes.UUID,
+        allowNull: true,
+    },
+    reversedAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+    },
+    reversalReason: {
+        type: DataTypes.TEXT,
+        allowNull: true,
     }
 }, {
     timestamps: true,

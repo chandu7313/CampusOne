@@ -10,6 +10,7 @@ const {
     StudentProfile,
     Department,
     Program,
+    Year,
     Semester,
     Classroom,
     Course,
@@ -21,7 +22,10 @@ const {
     Assignment,
     AssignmentSubmission,
     Message,
-    PlacementRecord
+    PlacementRecord,
+    FeeStructure,
+    StudentFee,
+    FeePayment
 } = models;
 
 const NUM_DEPARTMENTS = 5;
@@ -94,13 +98,22 @@ const runSeeder = async () => {
 
         const semesters = [];
         for (const prog of programs) {
-            for (let s = 1; s <= prog.totalSemesters; s++) {
-                semesters.push(await Semester.create({
+            for (let y = 1; y <= prog.durationYears; y++) {
+                const year = await Year.create({
                     programId: prog.id,
-                    semesterNumber: s,
-                    academicYear: '2024-25',
-                    status: s === 1 ? 'ACTIVE' : 'UPCOMING'
-                }));
+                    name: `Year ${y}`,
+                    yearNumber: y
+                });
+                for (let s = 1; s <= 2; s++) {
+                    const semNumber = (y - 1) * 2 + s;
+                    semesters.push(await Semester.create({
+                        programId: prog.id,
+                        yearId: year.id,
+                        semesterNumber: semNumber,
+                        academicYear: '2024-25',
+                        status: semNumber === 1 ? 'ACTIVE' : 'UPCOMING'
+                    }));
+                }
             }
         }
 
@@ -295,6 +308,80 @@ const runSeeder = async () => {
                 authorId: (await User.findOne({ where: { role: 'Admin' } })).id,
                 isPublished: true
             });
+        }
+
+        // ==========================================
+        // PHASE 7: FINANCE MODULE
+        // ==========================================
+        logger.info('Phase 7: Finance (Fees & Payments)...');
+        const feeStructures = [];
+        for (const prog of programs) {
+            feeStructures.push(await FeeStructure.create({
+                programId: prog.id,
+                academicYear: '2024-25',
+                semester: 1,
+                tuitionFee: faker.number.int({ min: 50000, max: 150000 }),
+                libraryFee: faker.number.int({ min: 2000, max: 5000 }),
+                labFee: faker.number.int({ min: 5000, max: 15000 }),
+                examinationFee: faker.number.int({ min: 1000, max: 3000 }),
+                sportsFee: faker.number.int({ min: 1000, max: 2000 }),
+                hostelFee: faker.number.int({ min: 20000, max: 60000 }),
+                transportFee: faker.number.int({ min: 10000, max: 30000 }),
+                developmentFee: faker.number.int({ min: 5000, max: 12000 }),
+                medicalFee: faker.number.int({ min: 500, max: 1500 }),
+                miscellaneous: 1000,
+                dueDate: 15,
+                lateFeePerDay: 50,
+                lateFeeStartDate: 5
+            }));
+        }
+
+        const students = await StudentProfile.findAll({ limit: 50 });
+        for (const student of students) {
+            const structure = feeStructures.find(fs => fs.programId === student.programId);
+            if (structure) {
+                const total = Number(structure.tuitionFee) + Number(structure.libraryFee) + Number(structure.labFee) + 
+                              Number(structure.examinationFee) + Number(structure.sportsFee) + Number(structure.hostelFee) + 
+                              Number(structure.transportFee) + Number(structure.developmentFee) + Number(structure.medicalFee) + Number(structure.miscellaneous);
+                
+                const status = faker.helpers.arrayElement(['Paid', 'Pending', 'Partial', 'Overdue']);
+                let paidAmount = 0;
+                
+                if (status === 'Paid') paidAmount = total;
+                else if (status === 'Partial') paidAmount = faker.number.int({ min: total * 0.3, max: total * 0.8 });
+
+                const fee = await StudentFee.create({
+                    studentProfileId: student.id,
+                    feeStructureId: structure.id,
+                    totalAmount: total,
+                    paidAmount,
+                    status,
+                    dueDate: faker.date.future(),
+                    tuitionFee: structure.tuitionFee,
+                    libraryFee: structure.libraryFee,
+                    labFee: structure.labFee,
+                    examinationFee: structure.examinationFee,
+                    sportsFee: structure.sportsFee,
+                    hostelFee: structure.hostelFee,
+                    transportFee: structure.transportFee,
+                    developmentFee: structure.developmentFee,
+                    medicalFee: structure.medicalFee,
+                    miscellaneous: structure.miscellaneous,
+                });
+
+                if (paidAmount > 0) {
+                    await FeePayment.create({
+                        studentFeeId: fee.id,
+                        studentProfileId: student.id,
+                        amountPaid: paidAmount,
+                        paymentMethod: faker.helpers.arrayElement(['Online', 'Cash', 'UPI']),
+                        transactionId: `TXN-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+                        receiptNumber: `RCP-202501-${Math.floor(Math.random() * 10000)}`,
+                        paymentDate: faker.date.recent(),
+                        status: 'Success'
+                    });
+                }
+            }
         }
 
         logger.info('✅ SEEDING COMPLETE!');
